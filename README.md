@@ -74,7 +74,7 @@ To prepare this dataset, we resized the image to (224, 224) and converted the re
 #### Training Procedure  
 First, a GPU is recommended for faster training.
 
-The model can be configured by modifying the variables *num_classes*, *num_epochs*, *batch_size*, and *learning_rate*. By defaul, the model is trained with the Stochastic Gradient Descent with Momentum optimizer and with the Cross Entropy Loss.  
+The model can be configured by modifying the variables *num_classes*, *num_epochs*, *batch_size*, and *learning_rate*. By default, the model is trained with the Stochastic Gradient Descent with Momentum optimizer and with the Cross Entropy Loss.  
 
 
 #### Hyperparameters
