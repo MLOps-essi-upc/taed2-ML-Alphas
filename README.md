@@ -63,7 +63,7 @@ The training dataset has a distribution of 50.1% of Non_Demented cases, 34.8% of
 Users (both direct and downstream) should be made aware of the risks, biases and limitations of the model.
 
 ### How to Get Started with the Model
-...
+Use the code below to get started with the model.
 
 ### Training Details
 #### Training data
@@ -95,4 +95,3 @@ We will use precision, recall, F1-score and area under the ROC curve (AUC-ROC) i
 
 #### Results
 
-### Environmental Impact??
