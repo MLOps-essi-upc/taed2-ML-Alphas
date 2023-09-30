@@ -68,9 +68,20 @@ Users (both direct and downstream) should be made aware of the risks, biases and
 ### Training Details
 #### Training data
 The training dataset has 5120 rows and a number of bytes of 22,560,791.2. Additionally, the training set has a label distribution of 50.1% of Non_Demented cases, 34.8% of Very_Mild_Demented, 14.1% of Mild_Demented and 1% of Moderate_Demented. 
+To prepare this dataset, we resized the image to (224, 224) and converted the resulting PIL image to tensor.
+After that, the *data_loader* function is called to split the data into training and validation sets. This function starts by normalizing the given dataset. The dataset is split into training and validation sets using the default valid_size:10% of the data will be used for validation.
 
-#### Training Procedure and hyperparameters
-The initial training was performed with 7 epochs, a batch size of 16 and a learning rate of 0.01. Furthermore, the criterion chosen was the Cross Entropy Loss and the optimizer was the Stochastic Gradient Descent.
+#### Training Procedure  
+
+
+#### Hyperparameters
+The initial training was performed with:
+- Number of epochs: 7
+- Batch size: 16
+- Learning rate: 0.01
+- Optimizer: Stochastic Gradient Descent with Momentum
+- Loss Function: Cross Entropy Loss
+- Regularization: weight decay of 0.001
 
 ### Evaluation
 #### Testing data
