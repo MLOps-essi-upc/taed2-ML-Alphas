@@ -45,8 +45,8 @@ ResNet is a deep neural network architecture designed to overcome the vanishing 
   
 ### Intended Uses
 - **Primary intended use:** Classify brain pictures of MRI scans according to the severity of the Alzheimer disease they present.
-**- Primary intended users:** Researchers and health medicine applications.
-**- Out-of-scope use cases:** Detection of other brain diseases different from Alzheimer.
+- **Primary intended users:** Researchers and health medicine applications.
+- **Out-of-scope use cases:** Detection of other brain diseases different from Alzheimer.
 
 ### Bias, Risks, and Limitations
 The training dataset has a distribution of 50.1% of Non_Demented cases, 34.8% of Very_Mild_Demented, 14.1% of Mild_Demented and 1% of Moderate_Demented. This imbalance on the class distribution may potentially lead to some biases and risks:
