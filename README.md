@@ -28,6 +28,8 @@ The model consists of a ResNet architecture, a deep neural network architecture 
 ### Model Details
 #### Model Description
 ResNet is a deep neural network architecture designed to overcome the vanishing gradient problem and improve the training of very deep neural networks.  It uses residual blocks, which introduce skip connections that allow the network to bypass one or more layers. These enable the flow of gradient information during training, making it easier to train deep networks without suffering from diminishing gradients. In each residual block, the input to the block is combined with the output of the block, allowing the network to learn the residual, or the difference between the desired output and the input. 
+<img width="958" alt="resnet_architecture" src="https://github.com/MLOps-essi-upc/taed2-ML-Alphas/assets/71087191/9b106c52-c463-4fcc-8a9b-d8d9d69412a7">
+
 
 - **Developed by:** {{ developers | default("[More Information Needed]", true)}}
 - **Shared by [optional]:** {{ shared_by | default("[More Information Needed]", true)}}
