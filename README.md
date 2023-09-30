@@ -27,14 +27,14 @@ The model consists of a ResNet architecture, a deep neural network architecture 
 
 ### Model Details
 #### Model Description
-ResNet is a deep neural network architecture designed to overcome the vanishing gradient problem and improve the training of very deep neural networks.  It uses residual blocks, which introduce skip connections that allow the network to bypass one or more layers. These enable the flow of gradient information during training, making it easier to train deep networks without suffering from diminishing gradients. In each residual block, the input to the block is combined with the output of the block, allowing the network to learn the residual, or the difference between the desired output and the input. 
+ResNet (Residual Network) is a deep neural network architecture designed to overcome the vanishing gradient problem and improve the training of very deep neural networks.  It uses residual blocks, which introduce skip connections that allow the network to bypass one or more layers. These enable the flow of gradient information during training, making it easier to train deep networks without suffering from diminishing gradients. In each residual block, the input to the block is combined with the output of the block, allowing the network to learn the residual, or the difference between the desired output and the input. 
 <img width="958" alt="resnet_architecture" src="https://github.com/MLOps-essi-upc/taed2-ML-Alphas/assets/71087191/9b106c52-c463-4fcc-8a9b-d8d9d69412a7">
 
+Particularly, this ResNet has a stride of 2 for the convolution and a padding of 3. On the other hand, the Residual Block has convolutions of stride and padding of value 1.
 
-- **Developed by:** {{ developers | default("[More Information Needed]", true)}}
-- **Shared by [optional]:** {{ shared_by | default("[More Information Needed]", true)}}
-- **Model type:** {{ model_type | default("[More Information Needed]", true)}}
-- **Language(s) (NLP):** {{ language | default("[More Information Needed]", true)}}
+- **Developed by:** Gerard Martin
+- **Model type:** ResNet-34
+- **Language(s):** Python
 - **License:** {{ license | default("[More Information Needed]", true)}}
 - **Finetuned from model [optional]:** {{ finetuned_from | default("[More Information Needed]", true)}}
 
@@ -69,7 +69,8 @@ Users (both direct and downstream) should be made aware of the risks, biases and
 #### Training data
 The training dataset has 5120 rows and a number of bytes of 22,560,791.2. Additionally, the training set has a label distribution of 50.1% of Non_Demented cases, 34.8% of Very_Mild_Demented, 14.1% of Mild_Demented and 1% of Moderate_Demented. 
 
-#### Training Procedure
+#### Training Procedure and hyperparameters
+The initial training was performed with 7 epochs, a batch size of 16 and a learning rate of 0.01. Furthermore, the criterion chosen was the Cross Entropy Loss and the optimizer was the Stochastic Gradient Descent.
 
 ### Evaluation
 #### Testing data
