@@ -43,24 +43,25 @@ ResNet is a deep neural network architecture designed to overcome the vanishing 
 - **Paper [optional]:** {{ paper | default("[More Information Needed]", true)}}
 - **Demo [optional]:** {{ demo | default("[More Information Needed]", true)}}
   
-### Intended Use
-- Primary intended uses: Classify brain pictures of MRI scans according to the severity of the Alzheimer disease they present.
-- Primary intended users: Researchers and health medicine applications.
-- Out-of-scope use cases: Detection of other brain diseases different from Alzheimer.
+### Intended Uses
+- **Primary intended use:** Classify brain pictures of MRI scans according to the severity of the Alzheimer disease they present.
+**- Primary intended users:** Researchers and health medicine applications.
+**- Out-of-scope use cases:** Detection of other brain diseases different from Alzheimer.
 
 ### Bias, Risks, and Limitations
 The training dataset has a distribution of 50.1% of Non_Demented cases, 34.8% of Very_Mild_Demented, 14.1% of Mild_Demented and 1% of Moderate_Demented. This imbalance on the class distribution may potentially lead to some biases and risks:
 
-- Bias in model training: the model may perform well on the majority class ("Non_Demented" one) but poorly on minority classes.If the "Non_Demented" class is not handled carefully, model might have a bias towards classifying instances as "Non_Demented", even if they belong to another.
-- Loss of information: insufficient training data for minority classes, probably leading to an inadequate understanding.
-- Reduced generalization: the model may not generalize well to new data, specially for minority classes.
-- Model Overfitting: the model may overfit the majority class.
-- Ethical Concerns: biased predictions due to the class imbalance can have ethical implications, especially considering that our model predictions impact individuals' lives.
+- **Bias in model training:** the model may perform well on the majority class ("Non_Demented" one) but poorly on minority classes.If the "Non_Demented" class is not handled carefully, model might have a bias towards classifying instances as "Non_Demented", even if they belong to another.
+- **Loss of information:** insufficient training data for minority classes, probably leading to an inadequate understanding.
+- **Reduced generalization:** the model may not generalize well to new data, specially for minority classes.
+- **Model Overfitting:** the model may overfit the majority class.
+- **Ethical Concerns:** biased predictions due to the class imbalance can have ethical implications, especially considering that our model predictions impact individuals' lives.
 
-#### Recomendations
+#### Recommendations
 Users (both direct and downstream) should be made aware of the risks, biases and limitations of the model.
 
 ### How to Get Started with the Model
+...
 
 ### Training Details
 #### Training data
@@ -75,5 +76,6 @@ The test dataset contains 1,280 examples and 5,637,447.08 bytes. Nevertheless, i
 #### Metrics
 We will use precision, recall, F1-score and area under the ROC curve (AUC-ROC) in order to appropriately deal with the imbalanced dataset.
 
-prueba
+#### Results
 
+### Environmental Impact??
