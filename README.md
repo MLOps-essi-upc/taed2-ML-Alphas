@@ -76,7 +76,7 @@ First, a GPU is recommended for faster training.
 
 The model can be configured by modifying the variables *num_classes*, *num_epochs*, *batch_size*, and *learning_rate*. By default, the model is trained with the Stochastic Gradient Descent with Momentum optimizer and with the Cross Entropy Loss.  
 
-#### Hyperparameters
+##### Hyperparameters
 The initial training was performed with:
 - Number of epochs: 7
 - Batch size: 16
