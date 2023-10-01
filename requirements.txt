@@ -1,0 +1,8 @@
+# Requirements file for reproducing the analysis environment
+# generated with: pip freeze > requirements.txt
+Python>=3.6          # Python programming language
+Pillow==8.3.1        # Python Imaging Library (Pillow)
+mlflow==1.20.1       # Machine learning lifecycle management
+numpy==1.21.1        # Numerical computing library
+torch==1.9.0         # PyTorch deep learning framework
+torchvision==0.10.0  # PyTorch computer vision library
