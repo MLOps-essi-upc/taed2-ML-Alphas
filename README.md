@@ -23,7 +23,7 @@ The whole information about the dataset can be found in *POSAR LINK*
 Dataset was obtained from [Hugging Face](https://huggingface.co/datasets/Falah/Alzheimer_MRI).
 
 ## Model Card
-The model consists of a ResNet architecture, a deep neural network architecture designed to overcome the vanishing gradient problem and improve the training of  deep neural networks by using residual blocks.
+The model consists of a ResNet architecture, a deep neural network architecture designed to overcome the vanishing gradient problem and improve the training of  deep neural networks by using residual blocks. It is a modified and fined-tunned version of the ResNet-34 from https://blog.paperspace.com/writing-resnet-from-scratch-in-pytorch/.
 
 ### Model Details
 #### Model Description
@@ -38,12 +38,9 @@ Particularly, this ResNet has a stride of 2 for the convolution and a padding of
 - **License:** {{ license | default("[More Information Needed]", true)}}
 - **Finetuned from model [optional]:** {{ finetuned_from | default("[More Information Needed]", true)}}
 
-#### Model Sources [optional]
-<!-- Provide the basic links for the model. -->
+#### Model Sources
+The model is a modified and fined-tunned version of the ResNet-34 from https://blog.paperspace.com/writing-resnet-from-scratch-in-pytorch/.
 
-- **Repository:** {{ repo | default("[More Information Needed]", true)}}
-- **Paper [optional]:** {{ paper | default("[More Information Needed]", true)}}
-- **Demo [optional]:** {{ demo | default("[More Information Needed]", true)}}
   
 ### Intended Uses
 - **Primary intended use:** Classify brain pictures of MRI scans according to the severity of the Alzheimer disease they present.
