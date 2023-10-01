@@ -36,12 +36,8 @@ Particularly, this ResNet has a stride of 2 for the convolution and a padding of
 - **Model type:** ResNet-34
 - **Language(s):** Python
 - **License:** {{ license | default("[More Information Needed]", true)}}
-- **Finetuned from model [optional]:** {{ finetuned_from | default("[More Information Needed]", true)}}
+- **Finetuned from model: https://blog.paperspace.com/writing-resnet-from-scratch-in-pytorch/
 
-#### Model Sources
-The model is a modified and fined-tunned version of the ResNet-34 from https://blog.paperspace.com/writing-resnet-from-scratch-in-pytorch/.
-
-  
 ### Intended Uses
 - **Primary intended use:** Classify brain pictures of MRI scans according to the severity of the Alzheimer disease they present.
 - **Primary intended users:** Researchers and health medicine applications.
