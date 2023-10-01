@@ -76,7 +76,6 @@ First, a GPU is recommended for faster training.
 
 The model can be configured by modifying the variables *num_classes*, *num_epochs*, *batch_size*, and *learning_rate*. By default, the model is trained with the Stochastic Gradient Descent with Momentum optimizer and with the Cross Entropy Loss.  
 
-
 #### Hyperparameters
 The initial training was performed with:
 - Number of epochs: 7
@@ -91,7 +90,7 @@ The initial training was performed with:
 The test dataset contains 1,280 examples and 5,637,447.08 bytes. Nevertheless, its distribution is the following: 49.5% of Non_Demented cases, 35.9% of Very_Mild_Demented, 13.4% Mild_Demented and 1.2% of Moderate_Demented.
 
 #### Metrics
-We will use precision, recall, F1-score and area under the ROC curve (AUC-ROC) in order to appropriately deal with the imbalanced dataset.
+We will use accuracy. Nevertheless, it would be interesting to also analyze metrics such as precision, recall, F1-score and area under the ROC curve (AUC-ROC) in order to appropriately deal with the imbalanced dataset. This will be done in the following sessions.
 
 #### Results
 
