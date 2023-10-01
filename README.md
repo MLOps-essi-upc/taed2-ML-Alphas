@@ -63,7 +63,7 @@ The training dataset has a distribution of 50.1% of Non_Demented cases, 34.8% of
 Users (both direct and downstream) should be made aware of the risks, biases and limitations of the model.
 
 ### How to Get Started with the Model
-Use the code below to get started with the model.
+Use the code below to get started with the model. For the code to work, there are some prerequisites: having Python, PIL (Python Imaging Library), MLflow, NumPy and Pytorch installed.
 
 ### Training Details
 #### Training data
