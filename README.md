@@ -87,3 +87,8 @@ We will use accuracy. Nevertheless, it would be interesting to also analyze metr
 
 #### Results
 
+### Environmental Impact
+Carbon emissions are estimated using *CodeCarbon*.
+- Duration of the compute (in seconds):
+- Emissions as CO2-equivalents (in kg):
+- Energy consumed (in kWh):
