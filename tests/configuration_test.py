@@ -41,18 +41,30 @@ class AlzheimerDataset(Dataset):
         return AlzheimerDataset(selected_images, selected_labels, self.transform)
 
 
+def load_parquet_dara(parquet_path):
+    # Read  Parquet file
+    data = pd.read_parquet(parquet_path)
+
+    # Separate image data and labels
+    image_tensors = data['image_data'].tolist()
+    labels = data['labels'].tolist()
+
+    # Create tuple of image_tensors and labels
+    dataset = (image_tensors, labels)
+
+    return dataset
+
 """Returns a smaller dataset for training and testing Alzheimer_MRI dataset"""
 def sample_dataset():
-    # Read train and test data
-    with open('../data/prepared/train.pkl','rb') as tr_file:
-        image_tensors_tr,labels_tr = pickle.load(tr_file)
+    train_parquet_path = '../data/prepared/train.parquet'
+    test_parquet_path = '../data/prepared/test.parquet'
 
-    with open('../data/prepared/test.pkl','rb') as test_file:
-        image_tensors_test,labels_test = pickle.load(test_file)
+    dataset_train = load_parquet_data(train_parquet_path)
+    dataset_test = load_parquet_data(test_parquet_path)
 
     # create dataset objects
-    dataset_train = AlzheimerDataset(image_tensors_tr,labels_tr)
-    dataset_test = AlzheimerDataset(image_tensors_test,labels_test)
+    dataset_train = AlzheimerDataset(train_dataset[0], train_dataset[1])
+    dataset_test = AlzheimerDataset(test_dataset[0], test_dataset[1])
 
     # create smaller sample data for testing
     sample_data = dataset_train.select(list(range(25)))  # select first 25 samples
@@ -250,3 +262,4 @@ def specify_resnet():
     optimizer = torch.optim.SGD(model.parameters(), lr=params['learning_rate'], weight_decay = 0.001, momentum = 0.9)
 
     return model, params, criterion, optimizer
+
