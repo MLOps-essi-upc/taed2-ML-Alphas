@@ -44,10 +44,10 @@ class AlzheimerDataset(Dataset):
 """Returns a smaller dataset for training and testing Alzheimer_MRI dataset"""
 def sample_dataset():
     # Read train and test data
-    with open('.../data/prepared/train.pkl','rb') as tr_file:
+    with open('../data/prepared/train.pkl','rb') as tr_file:
         image_tensors_tr,labels_tr = pickle.load(tr_file)
 
-    with open('.../data/prepared/test.pkl','rb') as test_file:
+    with open('../data/prepared/test.pkl','rb') as test_file:
         image_tensors_test,labels_test = pickle.load(test_file)
 
     # create dataset objects
