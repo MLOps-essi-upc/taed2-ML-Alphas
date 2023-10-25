@@ -2,6 +2,7 @@ from PIL import Image
 import io
 import numpy as np
 <<<<<<< HEAD
+<<<<<<< HEAD
 import torch
 import torch.nn as nn
 from torchvision import transforms
@@ -25,6 +26,8 @@ def prepare_data(dataset_path, data_augmentation):
     labels = [-1 for i in range(num_instances)]
     
 =======
+=======
+>>>>>>> feature/configurating_api
 import pandas as pd
 from torchvision import transforms
 
@@ -36,7 +39,10 @@ def prepare_data(dataset_path, data_augmentation):
         num_instances *= 2
     dataset2 = {'Image': [], 'Label': []}
 
+<<<<<<< HEAD
 >>>>>>> 09828da033549e3b2cbd3e310616ccd1cdf9977b
+=======
+>>>>>>> feature/configurating_api
     transform = transforms.Compose([
         transforms.Resize((224, 224)),  # Resize the image to (224, 224)
         transforms.ToTensor(),          # Convert PIL Image to tensor
@@ -48,6 +54,7 @@ def prepare_data(dataset_path, data_augmentation):
             image_pil = Image.open(io.BytesIO(image_bytes))
             aug_image = tf.image.stateless_random_brightness(image_pil, max_delta=np.random.rand(), seed=(3, 0))
             pil_format = Image.fromarray(aug_image.numpy())
+<<<<<<< HEAD
 <<<<<<< HEAD
             dataset2[2*i] = [transform(image_pil),dataset.iloc[i]['label']]
             images[2*1] = transform(image_pil)
@@ -66,6 +73,8 @@ def prepare_data(dataset_path, data_augmentation):
     #df.columns = ["Image", "Label"]
     return images,labels
 =======
+=======
+>>>>>>> feature/configurating_api
             image_tensor = transform(image_pil).numpy().flatten()  # Convert and flatten the PyTorch tensor
             dataset2['Image'].append(image_tensor)
             dataset2['Label'].append(dataset.iloc[i]['label'])
@@ -79,7 +88,10 @@ def prepare_data(dataset_path, data_augmentation):
             image_tensor = transform(image_pil).numpy().flatten()  # Convert and flatten the PyTorch tensor
             dataset2['Image'].append(image_tensor)
             dataset2['Label'].append(dataset.iloc[i]['label'])
+<<<<<<< HEAD
 >>>>>>> 09828da033549e3b2cbd3e310616ccd1cdf9977b
+=======
+>>>>>>> feature/configurating_api
 
     df = pd.DataFrame(dataset2)
     return df
@@ -89,6 +101,7 @@ def main(repo_path):
     data_path = repo_path + "data"
     train_path = data_path + "/raw/train.parquet"
     test_path = data_path + "/raw/test.parquet"
+<<<<<<< HEAD
 <<<<<<< HEAD
     train_img,train_lab = prepare_data(train_path, data_augmentation)
     test_img,test_lab = prepare_data(test_path, data_augmentation)
@@ -103,6 +116,8 @@ def main(repo_path):
 
 main("../")
 =======
+=======
+>>>>>>> feature/configurating_api
 
     train_df = prepare_data(train_path, data_augmentation)
     test_df = prepare_data(test_path, data_augmentation)
@@ -113,4 +128,7 @@ main("../")
     test_df.to_parquet(prepared_path + '/test.parquet', index=False)
 
 main("../")
+<<<<<<< HEAD
 >>>>>>> 09828da033549e3b2cbd3e310616ccd1cdf9977b
+=======
+>>>>>>> feature/configurating_api
