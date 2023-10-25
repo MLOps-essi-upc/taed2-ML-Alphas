@@ -17,7 +17,7 @@ Test split:
 - Number of bytes: 5,637,447.08
 - Number of examples: 1,280
 
-The whole information about the dataset can be found in *POSAR LINK*
+The whole information about the dataset can be found in https://huggingface.co/datasets/Falah/Alzheimer_MRI
 
 #### Citation
 Dataset was obtained from [Hugging Face](https://huggingface.co/datasets/Falah/Alzheimer_MRI).
@@ -89,6 +89,8 @@ We will use accuracy. Nevertheless, it would be interesting to also analyze metr
 
 ### Environmental Impact
 Carbon emissions are estimated using *CodeCarbon*.
-- Duration of the compute (in seconds):
-- Emissions as CO2-equivalents (in kg):
-- Energy consumed (in kWh):
+- Duration of the compute (in seconds): 17029
+- Emissions as CO2-equivalents (in kg): 0.1161
+- Energy consumed (in kWh): 0.2565
+
+It should be noted this results are for a training with 15 epochs and a batch size of 32 (which obtains an accuracy of 96.875%).
