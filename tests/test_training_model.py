@@ -53,7 +53,7 @@ def test_training_model():
     with mlflow.start_run():
         train_loss_values, validation_accuracy = do_experiment(train_loader,valid_loader,model,params,criterion,optimizer,str(1))
 
-        # check that the training losses and validation accuracy is not None
+        # check that the training losses and validation accuracy are not None
         assert train_loss_values is not None, "Train loss should not be None"
         assert validation_accuracy is not None, "Validation accuracy should not be None"
 
