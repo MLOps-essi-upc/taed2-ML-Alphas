@@ -1,4 +1,19 @@
 stages:
+  extract_train_data:
+    cmd: python -m notebooks.extract_train
+    deps:
+      - notebooks/extract_train.py
+    outs:
+      - data/raw_data/train
+
+  extract_test_data:
+    cmd: python -m notebooks.extract_test
+    deps:
+      - notebooks/extract_test.py
+    outs:
+      - data/raw_data/test
+
+
   prepare:
     cmd: python -m notebooks.prepare
     deps:
