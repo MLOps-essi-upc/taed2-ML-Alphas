@@ -1,0 +1,10 @@
+stages:
+  prepare:
+    cmd: python -m notebooks.prepare
+    deps:
+      - data/raw/test.parquet
+      - data/raw/train.parquet
+      - notebooks/prepare.py
+    outs:
+      - data/prepared_data/train/
+      - data/prepared_data/test/
