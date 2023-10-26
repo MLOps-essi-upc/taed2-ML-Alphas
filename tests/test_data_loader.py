@@ -13,49 +13,54 @@ import pandas as pd
 import io
 import gc
 import numpy as np
+import pytest
 
 from configuration_test import sample_dataset
 from configuration_test import train_data_loader
 
-"""Check if the image is an array or a tensor"""
-def image_is_valid(image):
-    if torch.is_tensor(image):
-        return True
-    else:
-        raise ValueError("Image is not a tensor")
+"""Create fixture with sampled dataset"""
+@pytest.fixture
+def sample_data():
+    return sample_dataset()
 
 
-"""Check if a given label is valid (either 0, 1, 2 or 3)"""
-def label_is_valid(label):
-    valid_labels = [0, 1, 2, 3]
-    if label in valid_labels:
-        return True
-    else:
-        raise ValueError("Label not in available categories")
-
-"""Check if the sample dataset has images and labels, if the images are tensors,
-if the labels are integers with the available categories"""
-def check_images_and_labels(sample_data):
-    assert len(sample_data.image_tensors) > 0, "Sample data should have images"
-    assert len(sample_data.labels) > 0, "Sample data should have labels"
-
+"""Check if the images are tensors"""
+def test_image_is_valid(sample_data):
     for image in sample_data.image_tensors:
-        assert image_is_valid(image)
+        if torch.is_tensor(image):
+            return True
+        else:
+            raise ValueError("Image is not a tensor")
+
+
+"""Check if labels are valid (either 0, 1, 2 or 3)"""
+def test_label_is_valid(sample_data):
+    valid_labels = [0, 1, 2, 3]
 
     for label in sample_data.labels:
-        assert label_is_valid(label)
-
-"""Check if the train and validation loaders have any rows. """
-def check_data_loaders(train_loader, valid_loader):
-    assert len(train_loader) > 0, "Train loader should have rows"
-    assert len(valid_loader) > 0, "Validation loader should have rows"
+        if label in valid_labels:
+            return True
+        else:
+            raise ValueError("Label not in available categories")
 
 
-"""Perform different checks to examine if the data is loaded correctly"""
-def test_data_loader():
-    sample_data = sample_dataset()
+"""Check if the sample dataset has images"""
+def test_dataset_has_images(sample_data):
+    assert len(sample_data.image_tensors) > 0, "Sample data should have images"
 
-    check_images_and_labels(sample_data)
 
+"""Check if the sample dataset has labels"""
+def test_dataset_has_labels(sample_data):
+    assert len(sample_data.labels) > 0, "Sample data should have labels"
+
+
+"""Check if the train loader has any rows. """
+def test_train_loader_has_rows(sample_data):
     train_loader, valid_loader = train_data_loader(dataset=sample_data, batch_size=64)
-    check_data_loaders(train_loader, valid_loader)
+    assert len(train_loader) > 0, "Train loader should have rows"
+
+
+"""Check if the validation loader has any rows. """
+def test_val_loader_has_rows(sample_data):
+    train_loader, valid_loader = train_data_loader(dataset=sample_data, batch_size=64)
+    assert len(valid_loader) > 0, "Validation loader should have rows"
