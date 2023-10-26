@@ -13,6 +13,7 @@ import pandas as pd
 import io
 import gc
 import numpy as np
+import pytest
 
 from configuration_test import sample_dataset
 from configuration_test import train_data_loader
@@ -20,46 +21,60 @@ from configuration_test import specify_resnet
 from configuration_test import save_model
 from configuration_test import do_experiment
 
-
-"""Check if the training loss does not increase significantly after some epochs"""
-def loss_is_not_increasing_significantly(epoch_losses):
-    for i in range(len(epoch_losses) - 1):
-        # only check when the model has had time to learn something
-        if i > 6:
-            loss_increase = epoch_losses[i + 1] - epoch_losses[i]
-            # check the training loss does not increase by more than 10% between epochs
-            if (loss_increase / epoch_losses[i - 1]) > 0.1:
-                raise ValueError("Training loss increased significantly")
-    return True
-
-
-"""Check if the last training loss is smaller than the first one"""
-def loss_decreased(epoch_losses):
-    if epoch_losses[1] < epoch_losses[len(epoch_losses)-1]:
-        return ValueError("Training loss should have decreased")
-    else:
-        return True
-
-
-"""Test the model training: if the training loss and validation accuracy are not
-None, that the training model improves (loss decreases over the epochs) and that
-the accuracy has reasonable values (between 0 and 100%)"""
-def test_training_model():
+"""Declare fixtures"""
+@pytest.fixture
+def losses_and_accuracies():
     sample_data = sample_dataset()
     train_loader, valid_loader = train_data_loader(dataset=sample_data, batch_size=64)
     model, params, criterion, optimizer = specify_resnet()
 
     total_step = len(train_loader)
     with mlflow.start_run():
-        train_loss_values, validation_accuracy = do_experiment(train_loader,valid_loader,model,params,criterion,optimizer,str(1))
+        train_losses, validation_accuracy = do_experiment(train_loader,valid_loader,model,params,criterion,optimizer,str(1))
 
-        # check that the training losses and validation accuracy are not None
-        assert train_loss_values is not None, "Train loss should not be None"
-        assert validation_accuracy is not None, "Validation accuracy should not be None"
+    return train_losses, validation_accuracy
 
-        # check if loss is decreasing (training model is improving)
-        assert loss_is_not_increasing_significantly(train_loss_values)
-        assert loss_decreased(train_loss_values)
 
-        # check accuracy has reasonable values (between 0 and 100)
-        assert 0.0 <= validation_accuracy <= 100.0, "Validation accuracy should be between 0 and 100%"
+"""Test the model training: if the training loss is not None"""
+def test_losses_not_none(losses_and_accuracies):
+    train_losses, validation_accuracy = losses_and_accuracies
+    assert train_losses is not None, "Train loss should not be None"
+
+
+"""Test the model training: if the validation accuracy is not None"""
+def test_accuracy_not_none(losses_and_accuracies):
+    train_losses, validation_accuracy = losses_and_accuracies
+    assert validation_accuracy is not None, "Validation accuracy should not be None"
+
+
+"""Check that the training model improves: that the training loss does not increase
+significantly after some epochs"""
+def test_loss_not_increasing_significantly(losses_and_accuracies):
+    train_losses, validation_accuracy = losses_and_accuracies
+
+    for i in range(len(train_losses) - 1):
+        # only check when the model has had time to learn something
+        if i > 6:
+            loss_increase = train_losses[i + 1] - train_losses[i]
+            # check the training loss does not increase by more than 10% between epochs
+            if (loss_increase / train_losses[i - 1]) > 0.1:
+                raise ValueError("Training loss increased significantly")
+    return True
+
+
+"""Check that the training model improves: that the last training loss is smaller
+than the first one"""
+def test_loss_decreased(losses_and_accuracies):
+    train_losses, validation_accuracy = losses_and_accuracies
+
+    if train_losses[1] < train_losses[len(train_losses)-1]:
+        return ValueError("Training loss should have decreased")
+    else:
+        return True
+
+
+"""Check that the accuracy has reasonable values (between 0 and 100%)"""
+def test_accuracy_is_reasonable(losses_and_accuracies):
+    train_losses, validation_accuracy = losses_and_accuracies
+
+    assert 0.0 <= validation_accuracy <= 100.0, "Validation accuracy should be between 0 and 100%"
