@@ -17,13 +17,13 @@ import pickle
 def prepare_data(dataset_path, data_augmentation):
     dataset = pd.read_parquet(dataset_path)
 
-    num_instances = len(dataset) 
+    num_instances = len(dataset)
     if data_augmentation:
         num_instances *=2
     dataset2 = [[0,''] for i in range(num_instances)]
     images = ['*' for i in range(num_instances)]
     labels = [-1 for i in range(num_instances)]
-    
+
     transform = transforms.Compose([
         transforms.Resize((224, 224)),  # Resize the image to (224, 224)
         transforms.ToTensor(),          # Convert PIL Image to tensor
@@ -60,13 +60,16 @@ def main(repo_path):
     test_path = data_path + "/raw/test.parquet"
     train_img,train_lab = prepare_data(train_path, data_augmentation)
     test_img,test_lab = prepare_data(test_path, data_augmentation)
-    prepared_path = data_path + "/prepared"
+
+    prepared_path_train = data_path + "/prepared/train"
+    prepared_path_test = data_path + "/prepared/test"
+
     #train_files.to_csv(prepared + "/train.csv",index=False)
     #test_files.to_csv(prepared + "/test.csv",index=False)
-    with open (prepared_path+'/train.pkl','wb') as file:
+    with open (prepared_path_train+'/train.pkl','wb') as file:
        pickle.dump((train_img,train_lab), file)
-    
-    with open (prepared_path+'/test.pkl','wb') as file:
+
+    with open (prepared_path_test+'/test.pkl','wb') as file:
        pickle.dump((test_img,test_lab), file)
 
 main("../")
