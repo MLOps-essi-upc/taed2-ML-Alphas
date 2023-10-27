@@ -24,6 +24,16 @@ def sample_data():
     return sample_dataset()
 
 
+"""Check if the sample dataset has images"""
+def test_dataset_has_images(sample_data):
+    assert len(sample_data.image_tensors) > 0, "Sample data should have images"
+
+
+"""Check if the sample dataset has labels"""
+def test_dataset_has_labels(sample_data):
+    assert len(sample_data.labels) > 0, "Sample data should have labels"
+
+
 """Check if the images are tensors"""
 def test_image_is_valid(sample_data):
     for image in sample_data.image_tensors:
@@ -42,16 +52,6 @@ def test_label_is_valid(sample_data):
             return True
         else:
             raise ValueError("Label not in available categories")
-
-
-"""Check if the sample dataset has images"""
-def test_dataset_has_images(sample_data):
-    assert len(sample_data.image_tensors) > 0, "Sample data should have images"
-
-
-"""Check if the sample dataset has labels"""
-def test_dataset_has_labels(sample_data):
-    assert len(sample_data.labels) > 0, "Sample data should have labels"
 
 
 """Check if the train loader has any rows. """
