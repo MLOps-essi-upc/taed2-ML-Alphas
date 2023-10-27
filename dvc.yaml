@@ -1,25 +1,9 @@
 stages:
   extract_train_data:
-    cmd: python -m notebooks.extract_train
-    deps:
-      - notebooks/extract_train.py
-    outs:
-      - data/raw_data/train
-
+    cmd: '" -d" notebooks/extract_train.py " -o" data/raw " python" notebooks/extract_train_data.py'
   extract_test_data:
-    cmd: python -m notebooks.extract_test
-    deps:
-      - notebooks/extract_test.py
-    outs:
-      - data/raw_data/test
-
-
+    cmd: '" -d" notebooks/extract_test.py -o data/raw_data/test " python" notebooks/extract_test.py'
   prepare:
-    cmd: python -m notebooks.prepare
-    deps:
-      - data/raw_data/train.parquet
-      - data/raw_data/test.parquet
-      - notebooks/prepare.py
-    outs:
-      - data/prepared_data/train/
-      - data/prepared_data/test/
+    cmd: '" -d" notebooks/prepare.py -d data/raw_data/train -d data/raw_data/test
+      " -o" data/prepared_data/train -o data/prepared_data/test " python" notebooks/prepare.py
+      data/raw_data/train data/raw_data/test data/prepared_data/train data/prepared_data/test'
