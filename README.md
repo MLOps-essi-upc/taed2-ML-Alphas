@@ -94,3 +94,5 @@ Carbon emissions are estimated using *CodeCarbon*.
 - Energy consumed (in kWh): 0.2565
 
 It should be noted this results are for a training with 15 epochs and a batch size of 32 (which obtains an accuracy of 96.875%).
+
+Link to DagsHub repository: https://dagshub.com/aligator241/taed2-ML-Alphas 
