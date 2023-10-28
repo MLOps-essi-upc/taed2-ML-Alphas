@@ -53,11 +53,11 @@ def prepare_data(dataset_path, data_augmentation):
     return images,labels
 
 
-def main():
+def main(test_path, train_path):
     data_augmentation=False
     data_path = "data"
-    train_path = data_path + "/raw_data/train/"
-    test_path = data_path + "/raw_data/test/"
+    #train_path = data_path + "/raw_data/train/"
+    #test_path = data_path + "/raw_data/test/"
     train_img,train_lab = prepare_data(train_path, data_augmentation)
     test_img,test_lab = prepare_data(test_path, data_augmentation)
 
@@ -71,5 +71,3 @@ def main():
 
     with open (prepared_path_test+'/test.pkl','wb') as file:
        pickle.dump((test_img,test_lab), file)
-
-main("../")
