@@ -7,7 +7,7 @@ stages:
     - data/raw_data/test
     - data/raw_data/train
   prepare:
-    cmd: python notebooks/prepare.py
+    cmd: python notebooks/prepare.py data/prepared_data
     deps:
     - data/raw_data/test
     - data/raw_data/train
