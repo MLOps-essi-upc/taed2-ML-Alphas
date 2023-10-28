@@ -53,16 +53,16 @@ def prepare_data(dataset_path, data_augmentation):
     return images,labels
 
 
-def main(repo_path):
+def main():
     data_augmentation=False
-    data_path = repo_path + "data"
-    train_path = data_path + "/raw/train.parquet"
-    test_path = data_path + "/raw/test.parquet"
+    data_path = "data"
+    train_path = data_path + "/raw_data/train/"
+    test_path = data_path + "/raw_data/test/"
     train_img,train_lab = prepare_data(train_path, data_augmentation)
     test_img,test_lab = prepare_data(test_path, data_augmentation)
 
-    prepared_path_train = data_path + "/prepared/train"
-    prepared_path_test = data_path + "/prepared/test"
+    prepared_path_train = data_path + "/prepared_data/train"
+    prepared_path_test = data_path + "/prepared_data/test"
 
     #train_files.to_csv(prepared + "/train.csv",index=False)
     #test_files.to_csv(prepared + "/test.csv",index=False)

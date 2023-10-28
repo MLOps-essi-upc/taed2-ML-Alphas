@@ -1,0 +1,17 @@
+schema: '2.0'
+stages:
+  extract_data:
+    cmd: python notebooks/extract_data.py
+    deps:
+    - path: notebooks/extract_data.py
+      md5: 188f71f00966200985f5b713e8a04441
+      size: 400
+    outs:
+    - path: data/raw_data/test
+      md5: bb3bd030cd2b59945097f4a4ed95e48e.dir
+      size: 5666621
+      nfiles: 3
+    - path: data/raw_data/train
+      md5: 5e462a88b983c8c1ae80f1826eb7576a.dir
+      size: 22642134
+      nfiles: 3
