@@ -15,3 +15,29 @@ stages:
       md5: 5e462a88b983c8c1ae80f1826eb7576a.dir
       size: 22642134
       nfiles: 3
+  prepare:
+    cmd:
+    - python notebooks/prepare.py data/raw_data/test data/raw_data/train
+    - mkdir -p data/prepared_data/test
+    - mkdir -p data/prepared_data/train
+    deps:
+    - path: data/raw_data/test
+      md5: bb3bd030cd2b59945097f4a4ed95e48e.dir
+      size: 5666621
+      nfiles: 3
+    - path: data/raw_data/train
+      md5: 5e462a88b983c8c1ae80f1826eb7576a.dir
+      size: 22642134
+      nfiles: 3
+    - path: notebooks/prepare.py
+      md5: d608c42ecc52a30ca31d78076ddfe142
+      size: 3477
+    outs:
+    - path: data/prepared_data/test
+      md5: d751713988987e9331980363e24189ce.dir
+      size: 0
+      nfiles: 0
+    - path: data/prepared_data/train
+      md5: d751713988987e9331980363e24189ce.dir
+      size: 0
+      nfiles: 0

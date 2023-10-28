@@ -1,5 +1,6 @@
 from PIL import Image
 import io
+import os
 import gc
 import numpy as np
 import torch
@@ -53,21 +54,43 @@ def prepare_data(dataset_path, data_augmentation):
     return images,labels
 
 
-def main(test_path, train_path):
-    data_augmentation=False
+def prepare(test_path, train_path):
     data_path = "data"
+
+    data_augmentation=False
+
+    # input path (raw)
     #train_path = data_path + "/raw_data/train/"
     #test_path = data_path + "/raw_data/test/"
+
+    # prepare the data
     train_img,train_lab = prepare_data(train_path, data_augmentation)
     test_img,test_lab = prepare_data(test_path, data_augmentation)
 
+    # Debugging: Print the lengths of the data
+    print("Train data length:", len(train_img))
+    print("Test data length:", len(test_img))
+
+
+    #prepared_path_train = data_path + "/prepared_data/train"
+    #prepared_path_test = data_path + "/prepared_data/test"
+
+    # output path (prepared)
     prepared_path_train = data_path + "/prepared_data/train"
     prepared_path_test = data_path + "/prepared_data/test"
 
+    FOLDER_EXISTS = os.path.exists(prepared_path_train)
+    if not FOLDER_EXISTS:
+        os.mkdir(prepared_path_train)
+
+    FOLDER_EXISTS = os.path.exists(prepared_path_test)
+    if not FOLDER_EXISTS:
+        os.mkdir(prepared_path_test)
+
     #train_files.to_csv(prepared + "/train.csv",index=False)
     #test_files.to_csv(prepared + "/test.csv",index=False)
-    with open (prepared_path_train+'/train.pkl','wb') as file:
+    with open (prepared_path_train,'wb') as file:
        pickle.dump((train_img,train_lab), file)
 
-    with open (prepared_path_test+'/test.pkl','wb') as file:
+    with open (prepared_path_test,'wb') as file:
        pickle.dump((test_img,test_lab), file)
