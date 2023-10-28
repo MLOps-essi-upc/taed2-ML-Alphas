@@ -1,4 +1,6 @@
 [core]
-    remote = myremote
+    remote = myremote2
 ['remote "myremote"']
     url = https://github.com/aligator241/taed2-ML-Alphas.git
+['remote "myremote2"']
+    url = /mp/dvcstore
