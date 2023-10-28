@@ -6,3 +6,12 @@ stages:
     outs:
     - data/raw_data/test
     - data/raw_data/train
+  prepare:
+    cmd: python notebooks/prepare.py
+    deps:
+    - data/raw_data/test
+    - data/raw_data/train
+    - notebooks/prepare.py
+    outs:
+    - data/prepared_data/test
+    - data/prepared_data/train
