@@ -1,43 +1,40 @@
 schema: '2.0'
 stages:
   extract_data:
-    cmd: python notebooks/extract_data.py
+    cmd:
+    - mkdir -p data/raw_data/test
+    - mkdir -p data/raw_data/train
+    - python3 notebooks/extract_data.py
     deps:
     - path: notebooks/extract_data.py
-      md5: 188f71f00966200985f5b713e8a04441
-      size: 400
+      md5: 7adac2479534d88264a20977d6c747b9
+      size: 516
     outs:
-    - path: data/raw_data/test
-      md5: bb3bd030cd2b59945097f4a4ed95e48e.dir
-      size: 5666621
-      nfiles: 3
-    - path: data/raw_data/train
-      md5: 5e462a88b983c8c1ae80f1826eb7576a.dir
-      size: 22642134
-      nfiles: 3
+    - path: data/raw_data/test/test.parquet
+      md5: 4aaa6018761c92eb035de4cd305eee4f
+      size: 5757330
+    - path: data/raw_data/train/train.parquet
+      md5: a4fa868e28fe97da1a62e0cb64e35012
+      size: 23043102
   prepare:
     cmd:
-    - python notebooks/prepare.py data/raw_data/test data/raw_data/train
     - mkdir -p data/prepared_data/test
     - mkdir -p data/prepared_data/train
+    - python3 notebooks/prepare.py data/raw_data/test data/raw_data/train
     deps:
-    - path: data/raw_data/test
-      md5: bb3bd030cd2b59945097f4a4ed95e48e.dir
-      size: 5666621
-      nfiles: 3
-    - path: data/raw_data/train
-      md5: 5e462a88b983c8c1ae80f1826eb7576a.dir
-      size: 22642134
-      nfiles: 3
+    - path: data/raw_data/test/test.parquet
+      md5: 4aaa6018761c92eb035de4cd305eee4f
+      size: 5757330
+    - path: data/raw_data/train/train.parquet
+      md5: a4fa868e28fe97da1a62e0cb64e35012
+      size: 23043102
     - path: notebooks/prepare.py
-      md5: d608c42ecc52a30ca31d78076ddfe142
-      size: 3477
+      md5: 18cf812aaf0aede66a19390b86b2a42a
+      size: 3545
     outs:
-    - path: data/prepared_data/test
-      md5: d751713988987e9331980363e24189ce.dir
-      size: 0
-      nfiles: 0
-    - path: data/prepared_data/train
-      md5: d751713988987e9331980363e24189ce.dir
-      size: 0
-      nfiles: 0
+    - path: data/prepared_data/test/test.pkl
+      md5: 00b0fbd7e755003ef462daa73ccf32fb
+      size: 257312188
+    - path: data/prepared_data/train/train.pkl
+      md5: b47e402c4a4aa9ce195af9486d9f73af
+      size: 1029246061
