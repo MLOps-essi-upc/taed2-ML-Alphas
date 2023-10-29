@@ -12,7 +12,7 @@ Particularly, this ResNet has a stride of 2 for the convolution and a padding of
 - **Model type:** ResNet-34
 - **Language(s):** Python
 - **License:** {{ license | default("[More Information Needed]", true)}}
-- **Finetuned from model: https://blog.paperspace.com/writing-resnet-from-scratch-in-pytorch/
+- **Finetuned from model:** https://blog.paperspace.com/writing-resnet-from-scratch-in-pytorch/
 
 ### Intended Uses
 - **Primary intended use:** Classify brain pictures of MRI scans according to the severity of the Alzheimer disease they present.
@@ -63,3 +63,10 @@ We will use accuracy. Nevertheless, it would be interesting to also analyze metr
 
 #### Results
 
+### Environmental Impact
+Carbon emissions are estimated using *CodeCarbon*.
+- Duration of the compute (in seconds): 17029
+- Emissions as CO2-equivalents (in kg): 0.1161
+- Energy consumed (in kWh): 0.2565
+
+It should be noted this results are for a training with 15 epochs and a batch size of 32 (which obtains an accuracy of 96.875%).
