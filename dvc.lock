@@ -42,3 +42,18 @@ stages:
       md5: f7b39cd707db1c429af3ef932b4ca36e
       size: 1029246065
       isexec: true
+  eval:
+    cmd:
+    - python3 src/models/evaluate.py
+    deps:
+    - path: data/prepared_data/test/test.pkl
+      md5: 705be76da6c2e19b5a32651acd7dd8f9
+      size: 257312196
+    - path: models/alzheimer_model.pth
+      md5: 864653b768f4ab1d3d384304f9f5b690
+      size: 170564631
+    outs:
+    - path: metrics/scores.json
+      md5: 8ae419f7f2a2e373fd2cff38225fc1d9
+      size: 33
+      isexec: true
