@@ -11,11 +11,11 @@ stages:
       size: 516
     outs:
     - path: data/raw_data/test/test.parquet
-      md5: 4aaa6018761c92eb035de4cd305eee4f
-      size: 5757330
+      md5: 7f4d7495115c0cd75493a9529c00789c
+      size: 5757331
     - path: data/raw_data/train/train.parquet
-      md5: a4fa868e28fe97da1a62e0cb64e35012
-      size: 23043102
+      md5: 3096b00c60998cd7a3e1a14c3f68c16a
+      size: 23043103
   prepare:
     cmd:
     - mkdir -p data/prepared_data/test
@@ -23,18 +23,18 @@ stages:
     - python3 notebooks/prepare.py data/raw_data/test data/raw_data/train
     deps:
     - path: data/raw_data/test/test.parquet
-      md5: 4aaa6018761c92eb035de4cd305eee4f
-      size: 5757330
+      md5: 7f4d7495115c0cd75493a9529c00789c
+      size: 5757331
     - path: data/raw_data/train/train.parquet
-      md5: a4fa868e28fe97da1a62e0cb64e35012
-      size: 23043102
+      md5: 3096b00c60998cd7a3e1a14c3f68c16a
+      size: 23043103
     - path: notebooks/prepare.py
       md5: 18cf812aaf0aede66a19390b86b2a42a
       size: 3545
     outs:
     - path: data/prepared_data/test/test.pkl
-      md5: 00b0fbd7e755003ef462daa73ccf32fb
-      size: 257312188
+      md5: ff2864fd1da925a01140309eb000f84d
+      size: 257311326
     - path: data/prepared_data/train/train.pkl
-      md5: b47e402c4a4aa9ce195af9486d9f73af
-      size: 1029246061
+      md5: af63b32a7e316c8700d0aa91aa2d965f
+      size: 1029245479

@@ -45,8 +45,8 @@ class AlzheimerDataset(Dataset):
 """Returns a smaller dataset for training and testing Alzheimer_MRI dataset"""
 def sample_dataset():
 
-    train_pkl_path = '../data/prepared/train.pkl'
-    test_pkl_path = '../data/prepared/test.pkl'
+    train_pkl_path = '../data/prepared_data/train/train.pkl'
+    test_pkl_path = '../data/prepared_data/test/test.pkl'
 
     # load pkl files
     with open(train_pkl_path,'rb') as tr_file:
