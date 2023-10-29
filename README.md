@@ -15,3 +15,16 @@ Our project is summarized in the dataset and model cards, which can be found in:
 
  ## Project structure
  PONER COOKIECUTER??
+
+
+## Getting Started
+To set up and run the project, you should run the following commands in your terminal:
+
+- $ git clone https://github.com/yourusername/taed2-ML-Alphas.git
+- cd taed2-ML-Alphas
+- $ pip freeze > requirements.txt
+- dvc repro
+- cd/......
+- python alz_final1.py
+
+PONER ALGO DE FASTAPI??
