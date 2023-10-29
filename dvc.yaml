@@ -3,9 +3,9 @@ stages:
     cmd: 
     - mkdir -p data/raw_data/test
     - mkdir -p data/raw_data/train
-    - python3 notebooks/extract_data.py
+    - python3 src/features/extract_data.py
     deps:
-    - notebooks/extract_data.py
+    - src/features/extract_data.py
     outs:
     - data/raw_data/test/test.parquet
     - data/raw_data/train/train.parquet
@@ -13,11 +13,11 @@ stages:
     cmd: 
     - mkdir -p data/prepared_data/test
     - mkdir -p data/prepared_data/train
-    - python3 notebooks/prepare.py data/raw_data/test data/raw_data/train
+    - python3 src/features/prepare.py data/raw_data/test data/raw_data/train
     deps:
     - data/raw_data/test/test.parquet
     - data/raw_data/train/train.parquet
-    - notebooks/prepare.py
+    - src/features/prepare.py
     outs:
     - data/prepared_data/test/test.pkl
     - data/prepared_data/train/train.pkl
