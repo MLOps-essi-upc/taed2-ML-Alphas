@@ -4,37 +4,41 @@ stages:
     cmd:
     - mkdir -p data/raw_data/test
     - mkdir -p data/raw_data/train
-    - python3 notebooks/extract_data.py
+    - python3 src/features/extract_data.py
     deps:
-    - path: notebooks/extract_data.py
-      md5: 7adac2479534d88264a20977d6c747b9
-      size: 516
+    - path: src/features/extract_data.py
+      md5: 09d3fa3d175badf2a7452397e2d15110
+      size: 473
     outs:
     - path: data/raw_data/test/test.parquet
-      md5: 7f4d7495115c0cd75493a9529c00789c
-      size: 5757331
+      md5: 4aaa6018761c92eb035de4cd305eee4f
+      size: 5757330
+      isexec: true
     - path: data/raw_data/train/train.parquet
-      md5: 3096b00c60998cd7a3e1a14c3f68c16a
-      size: 23043103
+      md5: a4fa868e28fe97da1a62e0cb64e35012
+      size: 23043102
+      isexec: true
   prepare:
     cmd:
     - mkdir -p data/prepared_data/test
     - mkdir -p data/prepared_data/train
-    - python3 notebooks/prepare.py data/raw_data/test data/raw_data/train
+    - python3 src/features/prepare.py data/raw_data/test data/raw_data/train
     deps:
     - path: data/raw_data/test/test.parquet
-      md5: 7f4d7495115c0cd75493a9529c00789c
-      size: 5757331
+      md5: 4aaa6018761c92eb035de4cd305eee4f
+      size: 5757330
     - path: data/raw_data/train/train.parquet
-      md5: 3096b00c60998cd7a3e1a14c3f68c16a
-      size: 23043103
-    - path: notebooks/prepare.py
-      md5: 18cf812aaf0aede66a19390b86b2a42a
-      size: 3545
+      md5: a4fa868e28fe97da1a62e0cb64e35012
+      size: 23043102
+    - path: src/features/prepare.py
+      md5: dc8157037c31c4d4f17216345f668c24
+      size: 3176
     outs:
     - path: data/prepared_data/test/test.pkl
-      md5: ff2864fd1da925a01140309eb000f84d
-      size: 257311326
+      md5: 705be76da6c2e19b5a32651acd7dd8f9
+      size: 257312196
+      isexec: true
     - path: data/prepared_data/train/train.pkl
-      md5: af63b32a7e316c8700d0aa91aa2d965f
-      size: 1029245479
+      md5: f7b39cd707db1c429af3ef932b4ca36e
+      size: 1029246065
+      isexec: true
