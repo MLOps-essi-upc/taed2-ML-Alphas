@@ -10,8 +10,8 @@ This project in the "Advanced Data Engineering 2" course aims to create and depl
 
 Our project is summarized in the dataset and model cards, which can be found in:
 
-- [dataset card] (https://github.com/MLOps-essi-upc/taed2-ML-Alphas/blob/main/docs/data%20card.md)
-- [model card] (https://github.com/MLOps-essi-upc/taed2-ML-Alphas/blob/main/docs/model%20card.md)
+- [dataset card](https://github.com/MLOps-essi-upc/taed2-ML-Alphas/blob/main/docs/data%20card.md)
+- [model card](https://github.com/MLOps-essi-upc/taed2-ML-Alphas/blob/main/docs/model%20card.md)
 
  ## Project structure
  PONER COOKIECUTER??
