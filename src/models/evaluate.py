@@ -7,7 +7,7 @@ from torch.utils.data import Dataset, DataLoader
 import zipfile
 import io
 
-
+"""Define paths for different directories"""
 # Path of the root
 ROOT_DIR= Path(Path(__file__).resolve().parent.parent).parent
 # Path to the processed data folder
@@ -17,20 +17,25 @@ METRICS_DIR = ROOT_DIR / "metrics"
 # Path to the models folder
 MODELS_FOLDER_PATH = ROOT_DIR / "models"
 
+
+"""Define a dataset class for AlzheimerDataset for a given dataset.
+It returns the corresponding image and label"""
 class AlzheimerDataset(Dataset):
     def __init__(self,image_tensors,labels,transform=None):
         self.image_tensors = image_tensors
         self.labels = labels
-    
+
     def __len__(self):
         return len(self.labels)
-    
+
     def __getitem__(self,idx):
         image = self.image_tensors[idx]
         label = self.labels[idx]
 
         return image,label
 
+
+"""Define a residual block class for the ResNet model"""
 class ResidualBlock(nn.Module):
     def __init__(self, in_channels, out_channels, stride = 1, downsample = None):
         super(ResidualBlock, self).__init__()
@@ -55,6 +60,8 @@ class ResidualBlock(nn.Module):
         out = self.relu(out)
         return out
 
+
+"""Define the ResNet model"""
 class ResNet(nn.Module):
     def __init__(self, block, layers, num_classes = 4):
         super(ResNet, self).__init__()
@@ -86,8 +93,8 @@ class ResNet(nn.Module):
             layers.append(block(self.inplanes, planes))
 
         return nn.Sequential(*layers)
-    
-    
+
+
     def forward(self, x):
         x = self.conv1(x)
         x = self.maxpool(x)
@@ -103,28 +110,25 @@ class ResNet(nn.Module):
         return x
 
 
+"""Define function that loads the test data from the prepared data folder
+Input arguments: input_folder_path (Path): Path to the test data folder.
+Returns: Tuple[torch.tensor, int]: Tuple containing the test images and labels."""
 def load_test_data(input_folder_path: Path):
-    """Load the test data from the prepared data folder.
 
-    Args:
-        input_folder_path (Path): Path to the test data folder.
-
-    Returns:
-        Tuple[torch.tensor, int]: Tuple containing the test images and labels.
-    """
     with open(input_folder_path / "test.pkl",'rb') as test_file:
         X_test,y_test = pickle.load(test_file)
     return X_test, y_test
 
 
+"""Function to read a model from a zip archive"""
 def read_zip(model_path,model_name):
 
     with zipfile.ZipFile(model_path,'r') as zip_ref:
-    
+
         if model_name in zip_ref.namelist():
             with zip_ref.open(model_name) as file:
                 model_bytes = io.BytesIO(file.read())
-            
+
             model = torch.load(model_bytes)
         else:
             print(model_name + 'not found in the zip archive.')
@@ -132,17 +136,15 @@ def read_zip(model_path,model_name):
 
 
 
+
+"""Define function that evaluates the model using the test data.
+Input arguments:
+    model_file_name (str): Filename of the model to be evaluated.
+    x (torch.tensor): Test images.
+    y (int list): Validation target.
+Returns: Accuracy of the model on teh test set """
 def evaluate_model(checkpoint_path, loader):
-    """Evaluate the model using the test data.
 
-    Args:
-        model_file_name (str): Filename of the model to be evaluated.
-        x (torch.tensor): Test images.
-        y (int list): Validation target.
-
-    Returns:
-        acc Accuracy of the model on teh test set
-    """
     device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 
     model = ResNet(ResidualBlock, [3, 4, 6, 3]).to(device)
@@ -174,16 +176,23 @@ if __name__ == "__main__":
     # Path to the metrics folder
     metrics_folder_path = METRICS_DIR
 
+    # Load test data
     X_test, y_test = load_test_data(PROCESSED_DATA_DIR / "test")
 
+    # Create a test dataset
     dataset_test = AlzheimerDataset(X_test,y_test)
     testLoader = DataLoader(dataset_test, batch_size=64, shuffle=True)
 
+    # Define the model path and name
     model_path = MODELS_FOLDER_PATH / "alzheimerModel.zip"
     name = "alzheimer_model.pth"
     #loaded_model = read_zip(model_path, name)
     loaded_model = model_path
+    
     # Load the model
+    # loaded_model = read_zip(model_path, name)
+
+    # Evaluate the model on the test data
     test_acc = evaluate_model(
         loaded_model, testLoader
     )
