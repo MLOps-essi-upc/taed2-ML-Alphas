@@ -18,19 +18,22 @@ from codecarbon import EmissionsTracker
 from codecarbon import track_emissions
 
 
+"""Establish a connection to DagsHub"""
 print("Establish connection")
 dagshub.init("taed2-ML-Alphas", "aligator241", mlflow=True)
 mlflow.set_tracking_uri("https://dagshub.com/aligator241/taed2-ML-Alphas.mlflow")
 
 
+"""Define a dataset class for AlzheimerDataset for a given dataset.
+It returns the corresponding image and label"""
 class AlzheimerDataset(Dataset):
     def __init__(self,image_tensors,labels,transform=None):
         self.image_tensors = image_tensors
         self.labels = labels
-    
+
     def __len__(self):
         return len(self.labels)
-    
+
     def __getitem__(self,idx):
         image = self.image_tensors[idx]
         label = self.labels[idx]
@@ -38,6 +41,9 @@ class AlzheimerDataset(Dataset):
         return image,label
 
 
+"""Deffine a data loader function for training.
+Input parameters: dataset, batch_size, random_seed, valid_size and shuffle.
+Output: train and validation loaders."""
 def train_data_loader(dataset,
                 batch_size,
                 random_seed=42,
@@ -69,6 +75,7 @@ def train_data_loader(dataset,
     return (train_loader, valid_loader)
 
 
+"""Define a residual block class for the ResNet model"""
 class ResidualBlock(nn.Module):
     def __init__(self, in_channels, out_channels, stride = 1, downsample = None):
         super(ResidualBlock, self).__init__()
@@ -93,6 +100,8 @@ class ResidualBlock(nn.Module):
         out = self.relu(out)
         return out
 
+
+"""Define the ResNet model"""
 class ResNet(nn.Module):
     def __init__(self, block, layers, num_classes = 4):
         super(ResNet, self).__init__()
@@ -140,11 +149,15 @@ class ResNet(nn.Module):
 
         return x
 
+
+"""Define a function for training the model with emissions tracking.
+Input parameters are: train_loader, model,criterion,optimizer,params and device
+It returns the model and optimizer. """
 @track_emissions
 def train(train_loader, model,criterion,optimizer,params,device):
 
     print("Start training")
-    
+
     total = 0
     correct = 0
     for epoch in range(params['num_epochs']):
@@ -156,7 +169,7 @@ def train(train_loader, model,criterion,optimizer,params,device):
             # Forward pass
             outputs = model(images)
             loss = criterion(outputs, labels)
-            
+
             # Compute accuracy
             _,predicted = torch.max(outputs.data,1)
             total += labels.size(0)
@@ -179,8 +192,9 @@ def train(train_loader, model,criterion,optimizer,params,device):
 
     return model,optimizer
 
-"""## Function to validate the model"""
-
+"""Define the function to validate the model
+Input parameters: validation loader, model and device.
+It logs the achieved accuracy."""
 def validation(valid_loader,model,device):
 
     print("Start validation")
@@ -200,28 +214,27 @@ def validation(valid_loader,model,device):
         mlflow.log_metric('val_acc',100*correct/total)
         print('Accuracy of the network on the {} validation images: {} %'.format(5000, 100 * correct / total))
 
-"""## Function to save the model"""
 
+"""Define function that saves the model, given the model, optimizer and na,e"""
 def save_model(model,optimizer,name):
     print("Save model "+ name)
     checkpoint = {'model': model,
               'state_dict': model.state_dict(),
               'optimizer' : optimizer.state_dict()}
-    
+
     torch.save(checkpoint['state_dict'], name)
     # OPTION 1
     torch.save(checkpoint['model'],name+'.pth')
     torch.save(checkpoint,'checkpoint.pth')
-        
-
-"""## Define steps of the experiment"""
 
 
+"""Define steps of the experiment"""
 def main():
 
+    # Start the emissions tracker
     tracker = EmissionsTracker()
     tracker.start()
-    
+
     print('Logging')
     mlflow.autolog()
     mlflow.pytorch.autolog()
@@ -237,7 +250,7 @@ def main():
     # Create dataset objects
     print("Step2: Creating Dataset objects")
     dataset_train = AlzheimerDataset(image_tensors_tr,labels_tr)
-    
+
     # Define parametres
     params= {
             'num_classes':4,
@@ -245,7 +258,7 @@ def main():
             'batch_size': 64,
             'learning_rate':0.01
         }
-    
+
     # Create loaders
     print("Step3: Creating loaders ")
     trainLoader, validLoader = train_data_loader(dataset_train,batch_size=params['batch_size'],shuffle=True)
@@ -253,13 +266,12 @@ def main():
     print("Step3: Creating ResNet")
     model = ResNet(ResidualBlock, [3, 4, 6, 3]).to(device)
 
-
-    # Loss and optimizer
+    # Initialize loss and optimizer
     criterion = nn.CrossEntropyLoss()
     optimizer = torch.optim.SGD(model.parameters(), lr=params['learning_rate'], weight_decay = 0.001, momentum = 0.9)
-    
-    # Train the model  
-    print("Start run")  
+
+    # Train the model
+    print("Start run")
     idx = 2
     with mlflow.start_run():
         mlflow.log_params(params)
@@ -267,6 +279,8 @@ def main():
         model,optimizer = train(trainLoader, model,criterion,optimizer,params,device)
         validation(validLoader,model,device)
         save_model(model,optimizer,'Model_alz_'+str(idx))
+
+    # Stop the emissions tracker
     tracker.stop()
 
 main()
