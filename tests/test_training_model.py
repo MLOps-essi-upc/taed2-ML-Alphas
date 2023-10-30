@@ -21,7 +21,8 @@ from configuration_test import specify_resnet
 from configuration_test import save_model
 from configuration_test import do_experiment
 
-"""Declare fixtures"""
+"""Declare fixture that returns a vector with the train losses obtained in the
+different training epochs and the validation accuracy obtained."""
 @pytest.fixture
 def losses_and_accuracies():
     sample_data = sample_dataset()
@@ -41,7 +42,7 @@ def test_losses_not_none(losses_and_accuracies):
     assert train_losses is not None, "Train loss should not be None"
 
 
-"""Test the model training: if the validation accuracy is not None"""
+"""Test the model validation: if the validation accuracy is not None"""
 def test_accuracy_not_none(losses_and_accuracies):
     train_losses, validation_accuracy = losses_and_accuracies
     assert validation_accuracy is not None, "Validation accuracy should not be None"
