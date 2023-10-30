@@ -49,11 +49,11 @@ stages:
     - path: data/prepared_data/test/test.pkl
       md5: 705be76da6c2e19b5a32651acd7dd8f9
       size: 257312196
-    - path: models/alzheimer_model.pth
-      md5: 864653b768f4ab1d3d384304f9f5b690
-      size: 170564631
+    - path: models/alzheimerModel.zip
+      md5: f0a62d51927c71cbdfe049ca7bb9bd3a
+      size: 85306117
     outs:
     - path: metrics/scores.json
-      md5: 8ae419f7f2a2e373fd2cff38225fc1d9
-      size: 33
+      md5: b60b94e9403c3f85b3b4aa728fe5e0a8
+      size: 34
       isexec: true

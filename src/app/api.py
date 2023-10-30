@@ -56,19 +56,6 @@ def construct_response(f):
 
     return wrap
 
-def read_zip(model_path,model_name):
-
-    with zipfile.ZipFile(model_path,'r') as zip_ref:
-    
-        if model_name in zip_ref.namelist():
-            with zip_ref.open(model_name) as file:
-                model_bytes = io.BytesIO(file.read())
-            
-            model = torch.load(model_bytes)
-        else:
-            print(model_name + 'not found in the zip archive.')
-    return model
-
 
 @app.on_event("startup")
 def _load_models():
@@ -76,9 +63,10 @@ def _load_models():
     model_path = MODELS_FOLDER_PATH / "alzheimerModel.zip"
     name = "alzheimer_model.pth"
 
-    checkpoint = read_zip(model_path,name)
+    #checkpoint = read_zip(model_path,name)
     model = ResNet(ResidualBlock,[3,4,6,3])
-    model.load_state_dict(checkpoint['state_dict'], map_location=torch.device('cpu'))) # This line uses .load() to read a .pth file and load the network weights on to the architecture.
+    checkpoint = torch.load(model_path,map_location=torch.device('cpu'))
+    model.load_state_dict(checkpoint) # This line uses .load() to read a .pth file and load the network weights on to the architecture.
     # model.load_state_dict(torch.load(os.path.abspath("../taed2-ML-Alphas/models/RESNET_0.zip"), map_location=torch.device('cpu'))) # This line uses .load() to read a .pth file and load the network weights on to the architecture.
     return model
 

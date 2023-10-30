@@ -135,18 +135,22 @@ def read_zip(model_path,model_name):
     return model
 
 
+
+
 """Define function that evaluates the model using the test data.
 Input arguments:
     model_file_name (str): Filename of the model to be evaluated.
     x (torch.tensor): Test images.
     y (int list): Validation target.
 Returns: Accuracy of the model on teh test set """
-def evaluate_model(checkpoint, loader):
+def evaluate_model(checkpoint_path, loader):
 
     device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 
     model = ResNet(ResidualBlock, [3, 4, 6, 3]).to(device)
-    model.load_state_dict(checkpoint['state_dict'])
+    #model.load_state_dict(checkpoint['state_dict'])
+    checkpoint = torch.load(checkpoint_path, map_location=torch.device('cpu'))
+    model.load_state_dict(checkpoint)
     model.eval()
 
 
@@ -182,9 +186,11 @@ if __name__ == "__main__":
     # Define the model path and name
     model_path = MODELS_FOLDER_PATH / "alzheimerModel.zip"
     name = "alzheimer_model.pth"
-
+    #loaded_model = read_zip(model_path, name)
+    loaded_model = model_path
+    
     # Load the model
-    loaded_model = read_zip(model_path, name)
+    # loaded_model = read_zip(model_path, name)
 
     # Evaluate the model on the test data
     test_acc = evaluate_model(
