@@ -4,6 +4,9 @@ from pathlib import Path
 import torch
 import torch.nn as nn
 from torch.utils.data import Dataset, DataLoader
+import zipfile
+import io
+
 
 # Path of the root
 ROOT_DIR= Path(Path(__file__).resolve().parent.parent).parent
@@ -111,11 +114,25 @@ def load_test_data(input_folder_path: Path):
     """
     with open(input_folder_path / "test.pkl",'rb') as test_file:
         X_test,y_test = pickle.load(test_file)
-        #y_test = torch.tensor(y_test)
     return X_test, y_test
 
 
-def evaluate_model(model_file_name, loader):
+def read_zip(model_path,model_name):
+
+    with zipfile.ZipFile(model_path,'r') as zip_ref:
+    
+        if model_name in zip_ref.namelist():
+            with zip_ref.open(model_name) as file:
+                model_bytes = io.BytesIO(file.read())
+            
+            model = torch.load(model_bytes)
+        else:
+            print(model_name + 'not found in the zip archive.')
+    return model
+
+
+
+def evaluate_model(checkpoint, loader):
     """Evaluate the model using the test data.
 
     Args:
@@ -129,7 +146,6 @@ def evaluate_model(model_file_name, loader):
     device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 
     model = ResNet(ResidualBlock, [3, 4, 6, 3]).to(device)
-    checkpoint = torch.load(MODELS_FOLDER_PATH / model_file_name)
     model.load_state_dict(checkpoint['state_dict'])
     model.eval()
 
@@ -161,10 +177,13 @@ if __name__ == "__main__":
     dataset_test = AlzheimerDataset(X_test,y_test)
     testLoader = DataLoader(dataset_test, batch_size=64, shuffle=True)
 
+    model_path = MODELS_FOLDER_PATH / "alzheimerModel.zip"
+    name = "alzheimer_model.pth"
+    loaded_model = read_zip(model_path, name)
 
     # Load the model
     test_acc = evaluate_model(
-        "alzheimer_model.pth", testLoader
+        loaded_model, testLoader
     )
 
     # Save the evaluation metrics to a dictionary to be reused later

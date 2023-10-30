@@ -47,14 +47,7 @@ def test_model_prediction(client):
         _files = {'uploadFile': open("image_pil.png",'rb')}
         # Define the URL and additional headers
         url = "http://127.0.0.1:8000/models"
-        headers = {"accept": "application/json"}
-
-        # Send the POST request
-        response = client.post(
-            url,
-            headers=headers,
-            files=_files
-        )
+        response = client.post("/models", files={"file": ("filename", open(image_filename, "rb"), "image/jpeg")})
 
         assert response.status_code == 200
     else:

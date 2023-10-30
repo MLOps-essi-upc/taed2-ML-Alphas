@@ -16,7 +16,13 @@ import io
 import gc
 import numpy as np
 
+"""This script contains different classes and functions as defined in the train
+and evaluate scripts of the project. Nevertheless, some of them have some modifications
+to facilitate the testings."""
 
+
+"""Alzheimer_Dataset class that also has a select function that returns only some
+rows from the given dataset"""
 class AlzheimerDataset(Dataset):
     def __init__(self,image_tensors,labels,transform=None):
         self.image_tensors = image_tensors
@@ -164,7 +170,8 @@ class ResNet(nn.Module):
         return x
 
 
-"""Apart from the model and optimizer, it returns the epoch training losses """
+"""Apart from the model and optimizer, it returns a vector with the epoch
+training losses """
 def train(train_loader, model,criterion,optimizer,params,device):
 
     epoch_losses = []
