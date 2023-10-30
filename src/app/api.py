@@ -52,7 +52,7 @@ def construct_response(f):
 @app.on_event("startup")
 def _load_models():
     model = ResNet(ResidualBlock,[3,4,6,3])
-    model.load_state_dict(torch.load("/Users/aliag/taed2-ML-Alphas/models/RESNET_0.zip", map_location=torch.device('cpu'))) # This line uses .load() to read a .pth file and load the network weights on to the architecture.
+    model.load_state_dict(torch.load(os.path.abspath("../taed2-ML-Alphas/models/RESNET_0.zip"), map_location=torch.device('cpu'))) # This line uses .load() to read a .pth file and load the network weights on to the architecture.
     return model
 
 
