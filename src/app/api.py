@@ -78,12 +78,8 @@ def _load_models():
 
     checkpoint = read_zip(model_path,name)
     model = ResNet(ResidualBlock,[3,4,6,3])
-<<<<<<< HEAD
-    # torch.load(os.path.abspath("../taed2-ML-Alphas/models/alzheimerModel.zip")
-    model.load_state_dict(checkpoint, map_location=torch.device('cpu'))) # This line uses .load() to read a .pth file and load the network weights on to the architecture.
-=======
-    model.load_state_dict(torch.load(os.path.abspath("../taed2-ML-Alphas/models/RESNET_0.zip"), map_location=torch.device('cpu'))) # This line uses .load() to read a .pth file and load the network weights on to the architecture.
->>>>>>> 278c8831ec9748ffe61e87eb6a205ad14b0869bd
+    model.load_state_dict(checkpoint['state_dict'], map_location=torch.device('cpu'))) # This line uses .load() to read a .pth file and load the network weights on to the architecture.
+    # model.load_state_dict(torch.load(os.path.abspath("../taed2-ML-Alphas/models/RESNET_0.zip"), map_location=torch.device('cpu'))) # This line uses .load() to read a .pth file and load the network weights on to the architecture.
     return model
 
 
