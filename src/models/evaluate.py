@@ -132,7 +132,7 @@ def read_zip(model_path,model_name):
 
 
 
-def evaluate_model(checkpoint, loader):
+def evaluate_model(checkpoint_path, loader):
     """Evaluate the model using the test data.
 
     Args:
@@ -146,7 +146,9 @@ def evaluate_model(checkpoint, loader):
     device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 
     model = ResNet(ResidualBlock, [3, 4, 6, 3]).to(device)
-    model.load_state_dict(checkpoint['state_dict'])
+    #model.load_state_dict(checkpoint['state_dict'])
+    checkpoint = torch.load(checkpoint_path, map_location=torch.device('cpu'))
+    model.load_state_dict(checkpoint)
     model.eval()
 
 
@@ -179,8 +181,8 @@ if __name__ == "__main__":
 
     model_path = MODELS_FOLDER_PATH / "alzheimerModel.zip"
     name = "alzheimer_model.pth"
-    loaded_model = read_zip(model_path, name)
-
+    #loaded_model = read_zip(model_path, name)
+    loaded_model = model_path
     # Load the model
     test_acc = evaluate_model(
         loaded_model, testLoader

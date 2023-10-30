@@ -26,6 +26,6 @@ stages:
     - python3 src/models/evaluate.py
     deps:
     - data/prepared_data/test/test.pkl
-    - models/alzheimer_model.pth
+    - models/alzheimerModel.zip
     outs:
     - metrics/scores.json
