@@ -8,11 +8,7 @@ numpy==1.21.1        # Numerical computing library
 torch==1.9.0         # PyTorch deep learning framework
 torchvision==0.10.0  # PyTorch computer vision library
 codecarbon           # CodeCarbon to report CO2 emissions
-<<<<<<< HEAD
 dvc		      # DVC pipeline
-=======
-dvc		               # DVC pipeline
->>>>>>> d832c40d59f709bdc21b233f2c7313a410b7cf64
 anaconda             # Anaconda distribution
 miniconda            # Miniconda distribution
 torchtext==0.10.0    # PyTorch NLP library (add if used)
@@ -23,8 +19,4 @@ json                 # JSON serialization and deserialization
 pickle               # Serialization and deserialization
 pathlib2==2.3.6      # Path handling library (add if used)
 zipfile              # Handling ZIP archives
-<<<<<<< HEAD
 uvicorn	      # To execute the API
-=======
-uvicorn	             # To execute the API
->>>>>>> d832c40d59f709bdc21b233f2c7313a410b7cf64
