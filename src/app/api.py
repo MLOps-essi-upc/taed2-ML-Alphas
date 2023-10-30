@@ -8,6 +8,7 @@ from datetime import datetime
 from functools import wraps
 from http import HTTPStatus
 from typing import List
+from pathlib import Path
 import torch
 import torch.nn as nn
 import torchvision.models as models
@@ -15,8 +16,16 @@ import torchvision.transforms as transforms
 from fastapi import FastAPI, HTTPException, Request, UploadFile, File
 from pathlib import Path
 from src.app.schemas import ResNet, ResidualBlock
+import zipfile
 
-
+# Path of the root
+ROOT_DIR= Path(Path(__file__).resolve().parent.parent).parent
+# Path to the processed data folder
+PROCESSED_DATA_DIR = ROOT_DIR / "data/prepared_data"
+# Path to the metrics folder
+METRICS_DIR = ROOT_DIR / "metrics"
+# Path to the models folder
+MODELS_FOLDER_PATH = ROOT_DIR / "models"
 
 # Define application
 app = FastAPI(
@@ -47,12 +56,30 @@ def construct_response(f):
 
     return wrap
 
+def read_zip(model_path,model_name):
+
+    with zipfile.ZipFile(model_path,'r') as zip_ref:
+    
+        if model_name in zip_ref.namelist():
+            with zip_ref.open(model_name) as file:
+                model_bytes = io.BytesIO(file.read())
+            
+            model = torch.load(model_bytes)
+        else:
+            print(model_name + 'not found in the zip archive.')
+    return model
 
 
 @app.on_event("startup")
 def _load_models():
+    
+    model_path = MODELS_FOLDER_PATH / "alzheimerModel.zip"
+    name = "alzheimer_model.pth"
+
+    checkpoint = read_zip(model_path,name)
     model = ResNet(ResidualBlock,[3,4,6,3])
-    model.load_state_dict(torch.load(os.path.abspath("../taed2-ML-Alphas/models/RESNET_0.zip"), map_location=torch.device('cpu'))) # This line uses .load() to read a .pth file and load the network weights on to the architecture.
+    model.load_state_dict(checkpoint['state_dict'], map_location=torch.device('cpu'))) # This line uses .load() to read a .pth file and load the network weights on to the architecture.
+    # model.load_state_dict(torch.load(os.path.abspath("../taed2-ML-Alphas/models/RESNET_0.zip"), map_location=torch.device('cpu'))) # This line uses .load() to read a .pth file and load the network weights on to the architecture.
     return model
 
 
