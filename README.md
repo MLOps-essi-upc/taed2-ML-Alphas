@@ -14,7 +14,56 @@ Our project is summarized in the dataset and model cards, which can be found in:
 - [model card](https://github.com/MLOps-essi-upc/taed2-ML-Alphas/blob/main/docs/model%20card.md)
 
  ## Project structure
- PONER COOKIECUTER??
+ The project has the following structure (only printed until 3 levels of the tree):
+taed2-ML-Alphas/
+├── data
+│   ├── prepared_data
+│   │   ├── test
+│   │   └── train
+│   ├── raw
+│   ├── raw_data
+│   │   ├── test
+│   │   └── train
+│   └── test
+├── docs
+├── great_expectations
+│   ├── checkpoints
+│   ├── expectations
+│   ├── plugins
+│   │   └── custom_data_docs
+│   ├── profilers
+│   └── uncommitted
+│       └── validations
+├── gx
+│   ├── checkpoints
+│   ├── expectations
+│   ├── plugins
+│   │   └── custom_data_docs
+│   ├── profilers
+│   └── uncommitted
+│       ├── data_docs
+│       └── validations
+├── metrics
+├── models
+├── notebooks
+│   └── __pycache__
+├── __pycache__
+├── references
+├── reports
+│   └── figures
+├── src
+│   ├── app
+│   │   └── __pycache__
+│   ├── features
+│   └── models
+├── tests
+│   ├── mlruns
+│   │   └── 0
+│   └── __pycache__
+└── venv
+    ├── bin
+    └── lib
+        └── python3.8
 
 
 ## Getting Started
@@ -24,7 +73,3 @@ To set up and run the project, you should run the following commands in your ter
 - cd taed2-ML-Alphas
 - $ pip freeze > requirements.txt
 - dvc repro
-- cd/......
-- python alz_final1.py
-
-PONER ALGO DE FASTAPI??
