@@ -84,15 +84,6 @@ def prepare(test_path, train_path):
     prepared_path_train = "data/prepared_data/train"
     prepared_path_test =  "data/prepared_data/test"
 
-    # check if output folders exist and create them if not
-    FOLDER_EXISTS = os.path.exists(prepared_path_train)
-    if not FOLDER_EXISTS:
-        os.mkdir(prepared_path_train)
-
-    FOLDER_EXISTS = os.path.exists(prepared_path_test)
-    if not FOLDER_EXISTS:
-        os.mkdir(prepared_path_test)
-
     # save train and test prepared data to pickle files
     with open (prepared_path_train+'/train.pkl','wb') as file:
        pickle.dump((train_img,train_lab), file)
