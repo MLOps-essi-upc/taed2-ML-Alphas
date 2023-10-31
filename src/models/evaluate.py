@@ -200,12 +200,6 @@ if __name__ == "__main__":
     # Save the evaluation metrics to a dictionary to be reused later
     metrics_dict = {"test_accuracy": test_acc}
 
-    # Save the evaluation metrics to a JSON file
-    with open(metrics_folder_path / "scores.json", "a") as scores_file:
-        json.dump(
-            metrics_dict,
-            scores_file,
-            indent=4,
-        )
+    with open(metrics_folder_path/"scores.json", 'w') as json_file:
+        json.dump(metrics_dict, scores_file, indent=4)
 
-    print("Evaluation completed.")

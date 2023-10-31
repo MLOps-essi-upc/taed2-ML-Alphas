@@ -144,7 +144,7 @@ def get_presence(presence):
         return "Very Mild Demented"
         
 
-@app.post("/Prediction", tags=["Prediction"])
+@app.post("/models/{type}", tags=["Prediction"])
 @construct_response
 async def _predict(request : Request, file : UploadFile): 
     """
