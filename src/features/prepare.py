@@ -67,6 +67,7 @@ def prepare_data(dataset_path, data_augmentation=False):
     # returned prepared (preprocessed) images and labels
     return images,labels
 
+
 """Define function to prepare training and test data"""
 def prepare(test_path, train_path):
 
