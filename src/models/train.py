@@ -1,25 +1,25 @@
 import torch
 import torch.nn as nn
-from torch.utils.data import Dataset, DataLoader
-from torchvision import transforms,datasets
+from torch.utils.data import Dataset
 from torch.utils.data.sampler import SubsetRandomSampler
-
-import shutil
-
+from codecarbon import EmissionsTracker, track_emissions
+import dagshub
+import mlflow, mlflow.pytorch
+from pathlib import Path
 import pickle
-import mlflow
-import mlflow.pytorch
-from PIL import Image
-import pandas as pd
-import io
 import gc
 import numpy as np
-import dagshub
 import yaml
+import json
 
-from codecarbon import EmissionsTracker
-from codecarbon import track_emissions
-
+# Path of the root
+ROOT_DIR= Path(Path(__file__).resolve().parent.parent).parent
+# Path to the processed data folder
+PROCESSED_DATA_DIR = ROOT_DIR / "data/prepared_data"
+# Path to the metrics folder
+METRICS_DIR = ROOT_DIR / "metrics"
+# Path to the models folder
+MODELS_FOLDER_PATH = ROOT_DIR / "models"
 
 """Establish a connection to DagsHub"""
 print("Establish connection")
@@ -213,9 +213,12 @@ def validation(valid_loader,model,device):
             total += labels.size(0)
             correct += (predicted == labels).sum().item()
             del images, labels, outputs
-
-        mlflow.log_metric('val_acc',100*correct/total)
-        print('Accuracy of the network on the {} validation images: {} %'.format(5000, 100 * correct / total))
+        
+        val_acc = 100*correct/total
+        mlflow.log_metric('val_acc',val_acc)
+        print('Accuracy of the network on the {} validation images: {} %'.format(5000, val_acc))
+    
+    return val_acc
 
 
 """Define function that saves the model, given the model, optimizer and na,e"""
@@ -225,7 +228,7 @@ def save_model(model,optimizer,path):
               'state_dict': model.state_dict(),
               'optimizer' : optimizer.state_dict()}
 
-    torch.save(checkpoint['state_dict'], path+'/alzheimerModel.zip')
+    torch.save(checkpoint['state_dict'], path / 'alzheimerModel.zip')
 
 
 """Define steps of the experiment"""
@@ -242,22 +245,22 @@ def main():
 
     # Read train and test data
     print("Step1: Reading .pkl files")
-    train_path_local = '../../data/prepared_data/train/train.pkl'
+
     #train_path_kaggle = '/kaggle/input/images/train.pkl'
-    with open(train_path_local,'rb') as tr_file:
+    with open(PROCESSED_DATA_DIR / "train/train.pkl",'rb') as tr_file:
         image_tensors_tr,labels_tr = pickle.load(tr_file)
 
     # Create dataset objects
     print("Step2: Creating Dataset objects")
     dataset_train = AlzheimerDataset(image_tensors_tr,labels_tr)
 
-    # Define parametres
-    params= {
-            'num_classes':4,
-            'num_epochs':1,
-            'batch_size': 8,
-            'learning_rate':0.01
-        }
+    # Load parametres
+    with open (ROOT_DIR /'params.yaml','r') as file:
+        params = yaml.safe_load(file)
+        # default params= { 'num_classes':4, 'num_epochs':20, 'batch_size': 64, 'learning_rate':0.01}
+    
+    print("Using the following parameters")
+    print(params)
 
     # Create loaders
     print("Step3: Creating loaders ")
@@ -270,19 +273,25 @@ def main():
     criterion = nn.CrossEntropyLoss()
     optimizer = torch.optim.SGD(model.parameters(), lr=params['learning_rate'], weight_decay = 0.001, momentum = 0.9)
 
+    metrics_dict = {}
     # Train the model
     print("Start run")
     with mlflow.start_run():
         mlflow.log_params(params)
         print("Step5: Start training")
         model,optimizer,train_acc = train(trainLoader, model,criterion,optimizer,params,device)
-        params['train_acc'] = train_acc
-        validation(validLoader,model,device)
-        path_to_model = "../../models"
-        save_model(model,optimizer,path_to_model)
+        val_acc = validation(validLoader,model,device)
+        metrics_dict = {"train_accuracy:":train_acc, "validation_accuracy":val_acc}
+        save_model(model,optimizer,MODELS_FOLDER_PATH)
 
-    with open('../../params.yaml', 'w') as outfile:
-        yaml.dump(params, outfile, default_flow_style=False)
     # Stop the emissions tracker
     tracker.stop()
+
+    with open(METRICS_DIR / "scores.json", "w") as scores_file:
+        json.dump(
+            metrics_dict,
+            scores_file,
+            indent=4,
+        )
+
 main()
