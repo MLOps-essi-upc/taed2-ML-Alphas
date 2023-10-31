@@ -18,6 +18,7 @@ from pathlib import Path
 from src.app.schemas import ResNet, ResidualBlock
 import zipfile
 import yaml
+import json
 
 # Path of the root
 ROOT_DIR= Path(Path(__file__).resolve().parent.parent).parent
@@ -67,7 +68,7 @@ def _load_models():
     Returns the model with the weights obtained in training
     """
     # Path to the model zip file
-    model_path = MODELS_FOLDER_PATH / "alzheimerModel.zip"
+    model_path = MODELS_FOLDER_PATH / "alzheimerModelBest.zip"
 
     # Define the neural network architecture
     model = ResNet(ResidualBlock, [3, 4, 6, 3])
@@ -117,9 +118,10 @@ async def get_models(request: Request):
     metric_file = "params.yaml"
     with open(os.path.join(ROOT_DIR, metric_file)) as metric_file_content:
         metric_data = yaml.safe_load(metric_file_content)
-
+    with open(os.path.join(METRICS_DIR, "scoresBest.json")) as file_content:
+        scores = json.load(file_content)
     # Create a list of model names along with their metrics
-    models_info = [{"name": name, "metrics": metric_data} for name in model_names]
+    models_info = [{"name": name, "metrics": metric_data, "scores":scores} for name in model_names]
 
     response = {
         "message": HTTPStatus.OK.phrase,
