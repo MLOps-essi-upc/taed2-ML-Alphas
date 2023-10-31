@@ -8,12 +8,15 @@ from torch.utils.data.sampler import SubsetRandomSampler
 import pickle
 import mlflow
 import mlflow.pytorch
+from pathlib import Path
 from PIL import Image
 import pandas as pd
 import io
 import gc
 import numpy as np
 import pytest
+import json
+import dvc.api
 
 from configuration_test import sample_dataset
 from configuration_test import train_data_loader
@@ -79,3 +82,16 @@ def test_accuracy_is_reasonable(losses_and_accuracies):
     train_losses, validation_accuracy = losses_and_accuracies
 
     assert 0.0 <= validation_accuracy <= 100.0, "Validation accuracy should be between 0 and 100%"
+
+
+"""Test metrics correctly stored: accuracies stored have values between 0 and 100%"""
+def test_metrics_stored_correctly():
+    ROOT_DIR= Path(Path(__file__).resolve().parent).parent
+    METRICS_DIR = ROOT_DIR / "metrics"
+
+    with open(METRICS_DIR / "scoresBest.json", "r") as scores_file:
+        loaded_metrics = json.load(scores_file)
+
+    # Check if the values in loaded_metrics are between 0 and 100
+    for key, value in loaded_metrics.items():
+        assert 0 <= value <= 100, "Accuracy is not between 0 and 100"
