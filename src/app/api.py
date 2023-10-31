@@ -45,11 +45,11 @@ def construct_response(f):
 
         # Construct response with required data
         response = {
-            "message": results["message"],  # Include message from the results
-            "method": request.method,       # Record the HTTP request method
-            "status-code": results["status-code"],  # Record the status code from the results
-            "timestamp": datetime.now(),    # Record the current timestamp
-            "url": request.url._url,       # Extract and record the URL
+            "message": results["message"], 
+            "method": request.method,       
+            "status-code": results["status-code"],  
+            "timestamp": datetime.now(),    
+            "url": request.url._url,      
         }
 
         # Add data to the response if available in the results
@@ -81,7 +81,7 @@ def _load_models():
 
 
 
-@app.get("/", tags=["General"])  # path operation decorator, defining the route and tag
+@app.get("/", tags=["General"])  
 @construct_response  # Decorator that wraps the function for constructing the API response
 async def _index(request: Request):
     """
@@ -93,15 +93,15 @@ async def _index(request: Request):
         "status-code": HTTPStatus.OK,
         "data": {
             "message": "Welcome to the Alzheimer's Disease Presence Classifier, also called ADPC. Upload an image of the patient's brain to know the severity of the situation."
-        },  # A greeting message for the user to understand the purpose of the API
+        }, 
     }
 
-    return response  # Returns the formatted JSON response
+    return response  
 
 
 
 
-@app.get("/models", tags=["Models"])  # Endpoint for available models and metrics
+@app.get("/models", tags=["Models"])  
 @construct_response
 async def get_models(request: Request):
     """
@@ -168,8 +168,8 @@ async def _predict(request : Request, file : UploadFile):
     # Performing inference on the processed image
     output = model(image)  
     output = torch.softmax(output, dim=1) 
-    probs, idxs = output.topk(1)  # Extracting the highest probability index
-    presence = get_presence(idxs)  # Converting the prediction index to a readable category
+    probs, idxs = output.topk(1)  
+    presence = get_presence(idxs)  
 
     # Generating the response with the prediction result
     response = {
