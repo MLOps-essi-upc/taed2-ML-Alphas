@@ -5,17 +5,19 @@
 
 import great_expectations as ge
 from datasets import load_dataset
+import pandas as pd
+
 
 context = ge.data_context.DataContext()
 context.add_or_update_expectation_suite("alzheimer_training_suite")
 
 datasource = context.sources.add_or_update_pandas(name="alzheimer_dataset")
 
-train = load_dataset('Falah/Alzheimer_MRI', split='train')
-
-import pandas as pd
+dataset = load_dataset('Falah/Alzheimer_MRI', split='train')
+train = dataset.to_pandas()
 
 data_asset = datasource.add_dataframe_asset(name="training", dataframe=train)
+
 
 batch_request = data_asset.build_batch_request()
 validator = context.get_validator(
