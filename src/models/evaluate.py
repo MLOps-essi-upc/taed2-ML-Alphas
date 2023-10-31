@@ -201,7 +201,7 @@ if __name__ == "__main__":
     metrics_dict = {"test_accuracy": test_acc}
 
     # Save the evaluation metrics to a JSON file
-    with open(metrics_folder_path / "scores.json", "w") as scores_file:
+    with open(metrics_folder_path / "scores.json", "a") as scores_file:
         json.dump(
             metrics_dict,
             scores_file,
