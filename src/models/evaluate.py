@@ -7,7 +7,7 @@ from torch.utils.data import Dataset, DataLoader
 import zipfile
 import io
 
-"""Define paths for different directories"""
+
 # Path of the root
 ROOT_DIR= Path(Path(__file__).resolve().parent.parent).parent
 # Path to the processed data folder
@@ -78,6 +78,7 @@ class ResNet(nn.Module):
         self.avgpool = nn.AvgPool2d(7, stride=1)
         self.fc = nn.Linear(512, num_classes)
 
+    """Define a layer of the Resneset class"""
     def _make_layer(self, block, planes, blocks, stride=1):
         downsample = None
         if stride != 1 or self.inplanes != planes:
@@ -148,7 +149,6 @@ def evaluate_model(checkpoint_path, loader):
     device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 
     model = ResNet(ResidualBlock, [3, 4, 6, 3]).to(device)
-    #model.load_state_dict(checkpoint['state_dict'])
     checkpoint = torch.load(checkpoint_path, map_location=torch.device('cpu'))
     model.load_state_dict(checkpoint)
     model.eval()
@@ -173,8 +173,6 @@ def evaluate_model(checkpoint_path, loader):
 
 
 if __name__ == "__main__":
-    # Path to the metrics folder
-    metrics_folder_path = METRICS_DIR
 
     # Load test data
     X_test, y_test = load_test_data(PROCESSED_DATA_DIR / "test")
@@ -185,21 +183,20 @@ if __name__ == "__main__":
 
     # Define the model path and name
     model_path = MODELS_FOLDER_PATH / "alzheimerModel.zip"
-    name = "alzheimer_model.pth"
-    #loaded_model = read_zip(model_path, name)
-    loaded_model = model_path
-    
-    # Load the model
-    # loaded_model = read_zip(model_path, name)
 
     # Evaluate the model on the test data
     test_acc = evaluate_model(
-        loaded_model, testLoader
+        model_path, testLoader
     )
 
-    # Save the evaluation metrics to a dictionary to be reused later
-    metrics_dict = {"test_accuracy": test_acc}
+    # Retrive the content of the file
+    with open(METRICS_DIR / "scores.json", 'r') as json_file:
+        scores = json.load(json_file)
+    
+    # Update the dictionary
+    scores["test_accuracy"] = test_acc 
 
-    with open(metrics_folder_path/"scores.json", 'w') as json_file:
-        json.dump(metrics_dict, scores_file, indent=4)
+    # Update the file scores.json with the new metric
+    with open(METRICS_DIR / "scores.json", 'w') as scores_file:
+        json.dump(scores, scores_file, indent=4)
 

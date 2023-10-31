@@ -49,11 +49,32 @@ stages:
     - path: data/prepared_data/test/test.pkl
       md5: 705be76da6c2e19b5a32651acd7dd8f9
       size: 257312196
+    - path: metrics/scores.json
+      md5: be203cefb3170c800cf2e010b7b3c6a0
+      size: 109
+      isexec: true
     - path: models/alzheimerModel.zip
-      md5: 24bf919fe2a756a7c5871347901e0376
-      size: 85306885
+      md5: 8235a88041a2beeec8a1817966a794d9
+      size: 85307653
+  train:
+    cmd:
+    - python3 src/models/train.py
+    deps:
+    - path: data/prepared_data/test/test.pkl
+      md5: 705be76da6c2e19b5a32651acd7dd8f9
+      size: 257312196
+    - path: data/prepared_data/train/train.pkl
+      md5: f7b39cd707db1c429af3ef932b4ca36e
+      size: 1029246065
+    - path: params.yaml
+      md5: e6240a35d527af07892523af1c4161b7
+      size: 70
     outs:
     - path: metrics/scores.json
-      md5: 87720585f9c66ef235f409364c20c06f
-      size: 33
+      md5: e82bd0b23e00fb4d0ec4afd8b264911e
+      size: 77
+      isexec: true
+    - path: models/alzheimerModel.zip
+      md5: 8235a88041a2beeec8a1817966a794d9
+      size: 85307653
       isexec: true
