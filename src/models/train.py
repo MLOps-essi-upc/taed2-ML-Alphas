@@ -4,6 +4,8 @@ from torch.utils.data import Dataset, DataLoader
 from torchvision import transforms,datasets
 from torch.utils.data.sampler import SubsetRandomSampler
 
+import shutil
+
 import pickle
 import mlflow
 import mlflow.pytorch
@@ -13,6 +15,7 @@ import io
 import gc
 import numpy as np
 import dagshub
+import yaml
 
 from codecarbon import EmissionsTracker
 from codecarbon import track_emissions
@@ -41,7 +44,7 @@ class AlzheimerDataset(Dataset):
         return image,label
 
 
-"""Deffine a data loader function for training.
+"""Define a data loader function for training.
 Input parameters: dataset, batch_size, random_seed, valid_size and shuffle.
 Output: train and validation loaders."""
 def train_data_loader(dataset,
@@ -190,7 +193,7 @@ def train(train_loader, model,criterion,optimizer,params,device):
         print ('Epoch [{}/{}], Loss: {:.4f}, Accuracy: {:.2f}%'
                        .format(epoch+1, params['num_epochs'], loss.item(), accuracy))
 
-    return model,optimizer
+    return model,optimizer,accuracy
 
 """Define the function to validate the model
 Input parameters: validation loader, model and device.
@@ -216,16 +219,13 @@ def validation(valid_loader,model,device):
 
 
 """Define function that saves the model, given the model, optimizer and na,e"""
-def save_model(model,optimizer,name):
-    print("Save model "+ name)
+def save_model(model,optimizer,path):
+    print("Saving model")
     checkpoint = {'model': model,
               'state_dict': model.state_dict(),
               'optimizer' : optimizer.state_dict()}
 
-    torch.save(checkpoint['state_dict'], name)
-    # OPTION 1
-    torch.save(checkpoint['model'],name+'.pth')
-    torch.save(checkpoint,'checkpoint.pth')
+    torch.save(checkpoint['state_dict'], path+'/alzheimerModel.zip')
 
 
 """Define steps of the experiment"""
@@ -242,9 +242,9 @@ def main():
 
     # Read train and test data
     print("Step1: Reading .pkl files")
-    train_path_local = '../data/prepared_data/train.pkl'
+    train_path_local = '../../data/prepared_data/train/train.pkl'
     #train_path_kaggle = '/kaggle/input/images/train.pkl'
-    with open(train_path_kaggle,'rb') as tr_file:
+    with open(train_path_local,'rb') as tr_file:
         image_tensors_tr,labels_tr = pickle.load(tr_file)
 
     # Create dataset objects
@@ -254,8 +254,8 @@ def main():
     # Define parametres
     params= {
             'num_classes':4,
-            'num_epochs':15,
-            'batch_size': 64,
+            'num_epochs':1,
+            'batch_size': 8,
             'learning_rate':0.01
         }
 
@@ -263,7 +263,7 @@ def main():
     print("Step3: Creating loaders ")
     trainLoader, validLoader = train_data_loader(dataset_train,batch_size=params['batch_size'],shuffle=True)
 
-    print("Step3: Creating ResNet")
+    print("Step4: Creating ResNet")
     model = ResNet(ResidualBlock, [3, 4, 6, 3]).to(device)
 
     # Initialize loss and optimizer
@@ -272,15 +272,17 @@ def main():
 
     # Train the model
     print("Start run")
-    idx = 2
     with mlflow.start_run():
         mlflow.log_params(params)
-        print("Step4: Start training")
-        model,optimizer = train(trainLoader, model,criterion,optimizer,params,device)
+        print("Step5: Start training")
+        model,optimizer,train_acc = train(trainLoader, model,criterion,optimizer,params,device)
+        params['train_acc'] = train_acc
         validation(validLoader,model,device)
-        save_model(model,optimizer,'Model_alz_'+str(idx))
+        path_to_model = "../../models"
+        save_model(model,optimizer,path_to_model)
 
+    with open('../../params.yaml', 'w') as outfile:
+        yaml.dump(params, outfile, default_flow_style=False)
     # Stop the emissions tracker
     tracker.stop()
-
 main()
