@@ -3,11 +3,6 @@ from pydantic import BaseModel
 from fastapi import FastAPI, UploadFile
 import torch.nn as nn
 
-class AlzheimerGrade(str, Enum):
-    Mild_Demented = 0
-    Moderate_Demented = 1
-    Non_Demented = 2
-    Very_Mild_Demented = 3
 
 class ResidualBlock(nn.Module):
     def __init__(self, in_channels, out_channels, stride=1, downsample=None):

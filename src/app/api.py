@@ -17,6 +17,7 @@ from fastapi import FastAPI, HTTPException, Request, UploadFile, File
 from pathlib import Path
 from src.app.schemas import ResNet, ResidualBlock
 import zipfile
+import yaml
 
 # Path of the root
 ROOT_DIR= Path(Path(__file__).resolve().parent.parent).parent
@@ -34,61 +35,105 @@ app = FastAPI(
     version="1.0",
 )
 
+
 def construct_response(f):
+    # Decorator for wrapping the response construction logic around other functions
     @wraps(f)
     async def wrap(request: Request, *args, **kwargs):
+        # Call the original function, waiting for the results
         results = await f(request, *args, **kwargs)
 
-        # Construct response
+        # Construct response with required data
         response = {
-            "message": results["message"],
-            "method": request.method,
-            "status-code": results["status-code"],
-            "timestamp": datetime.now(),
-            "url": request.url._url,
+            "message": results["message"],  # Include message from the results
+            "method": request.method,       # Record the HTTP request method
+            "status-code": results["status-code"],  # Record the status code from the results
+            "timestamp": datetime.now(),    # Record the current timestamp
+            "url": request.url._url,       # Extract and record the URL
         }
-        # Add data
+
+        # Add data to the response if available in the results
         if "data" in results:
             response["data"] = results["data"]
 
+        return response  
 
-        return response
-
-    return wrap
+    return wrap  
 
 
 @app.on_event("startup")
 def _load_models():
-    
+    """
+    Returns the model with the weights obtained in training
+    """
+    # Path to the model zip file
     model_path = MODELS_FOLDER_PATH / "alzheimerModel.zip"
-    name = "alzheimer_model.pth"
 
-    #checkpoint = read_zip(model_path,name)
-    model = ResNet(ResidualBlock,[3,4,6,3])
-    checkpoint = torch.load(model_path,map_location=torch.device('cpu'))
-    model.load_state_dict(checkpoint) # This line uses .load() to read a .pth file and load the network weights on to the architecture.
-    # model.load_state_dict(torch.load(os.path.abspath("../taed2-ML-Alphas/models/RESNET_0.zip"), map_location=torch.device('cpu'))) # This line uses .load() to read a .pth file and load the network weights on to the architecture.
-    return model
+    # Define the neural network architecture
+    model = ResNet(ResidualBlock, [3, 4, 6, 3])
+
+    # Load the pre-trained model weights and set the architecture
+    checkpoint = torch.load(model_path, map_location=torch.device('cpu'))
+    model.load_state_dict(checkpoint)
+    
+    return model 
 
 
 
-@app.get("/", tags=["General"])  # path operation decorator
-@construct_response
+
+@app.get("/", tags=["General"])  # path operation decorator, defining the route and tag
+@construct_response  # Decorator that wraps the function for constructing the API response
 async def _index(request: Request):
-    """Root endpoint."""
+    """
+    Returns a message to welcome users accessing the API's root.
+    """
+
+    response = {
+        "message": HTTPStatus.OK.phrase,  # Indicating a successful connection with status code 200
+        "status-code": HTTPStatus.OK,
+        "data": {
+            "message": "Welcome to the Alzheimer's Disease Presence Classifier, also called ADPC. Upload an image of the patient's brain to know the severity of the situation."
+        },  # A greeting message for the user to understand the purpose of the API
+    }
+
+    return response  # Returns the formatted JSON response
+
+
+
+
+@app.get("/models", tags=["Models"])  # Endpoint for available models and metrics
+@construct_response
+async def get_models(request: Request):
+    """
+    Returns a response containing information about available models and their associated metrics.
+    """
+    model_files = os.listdir(MODELS_FOLDER_PATH)
+    metrics_files = os.listdir(ROOT_DIR)
+
+    # Filter the model names
+    model_names = [file.split(".")[0] for file in model_files if file.endswith(".zip")]
+
+    # Prepare a dictionary to store model names and their respective metrics
+    metric_file = "params.yaml"
+    with open(os.path.join(ROOT_DIR, metric_file)) as metric_file_content:
+        metric_data = yaml.safe_load(metric_file_content)
+
+    # Create a list of model names along with their metrics
+    models_info = [{"name": name, "metrics": metric_data} for name in model_names]
 
     response = {
         "message": HTTPStatus.OK.phrase,
         "status-code": HTTPStatus.OK,
-        "data": {"message": "Welcome to the Alzheimer's Disease Presence Classifier, also called ADPC. Upload an image of the patient's barin to know the severity of the situation."},
+        "data": {"models": models_info}
     }
-
     return response
 
 
 
 def get_presence(presence):
-    """Convert a label ID to its corresponding name."""
+    """
+    Converts a label ID to its corresponding name.
+    """
     if presence[0].item()==0:
         return "Mild Demented"
     if presence[0].item()==1:
@@ -99,26 +144,34 @@ def get_presence(presence):
         return "Very Mild Demented"
         
 
-@app.post("/models", tags=["Prediction"])
+@app.post("/Prediction", tags=["Prediction"])
 @construct_response
-async def _predict(request : Request, file : UploadFile):  # Change payload to accept image file
-    image_bytes = await file.read()
-    stream = BytesIO(image_bytes)
-    image = Image.open(stream)
+async def _predict(request : Request, file : UploadFile): 
+    """
+    Reads an uploaded image and returns the prediction of the model
+    """
+    image_bytes = await file.read()  # Reading the bytes of the uploaded image file
+    stream = BytesIO(image_bytes)  # Creating a stream from the bytes data
+    image = Image.open(stream)  # Converting the byte stream to a PIL Image
 
+    # Preprocessing the image
     preprocess = transforms.Compose([
-        transforms.Resize((224, 224)),  # Resize the image to (224, 224)
-        transforms.ToTensor(),          # Convert PIL Image to tensor
+        transforms.Resize((224, 224)),  # Resizing the image to (224, 224) pixels
+        transforms.ToTensor(),  # Converting the PIL Image to a PyTorch tensor
     ])
-    image = preprocess(image)
-    image = image.unsqueeze(0)
+    image = preprocess(image)  
+    image = image.unsqueeze(0)  # Adding an extra dimension to make it a 4D tensor (batch dimension)
 
-    model = _load_models()
-    output = model(image)
-    output = torch.softmax(output, dim=1)  
-    probs, idxs = output.topk(1) 
-    presence= get_presence(idxs)
+    # Loading the neural network model
+    model = _load_models() 
 
+    # Performing inference on the processed image
+    output = model(image)  
+    output = torch.softmax(output, dim=1) 
+    probs, idxs = output.topk(1)  # Extracting the highest probability index
+    presence = get_presence(idxs)  # Converting the prediction index to a readable category
+
+    # Generating the response with the prediction result
     response = {
         "message": HTTPStatus.OK.phrase,
         "status-code": HTTPStatus.OK,
@@ -127,4 +180,5 @@ async def _predict(request : Request, file : UploadFile):  # Change payload to a
         },
     }
 
-    return response
+    return response 
+
