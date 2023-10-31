@@ -21,11 +21,20 @@ stages:
     outs:
     - data/prepared_data/test/test.pkl
     - data/prepared_data/train/train.pkl
+  train:
+    cmd:
+    - python3 src/models/train.py
+    deps:
+    - data/prepared_data/test/test.pkl
+    - data/prepared_data/train/train.pkl
+    - params.yaml
+    outs:
+    - models/alzheimerModel.zip
+    - metrics/scores.json
   eval:
     cmd: 
     - python3 src/models/evaluate.py
     deps:
     - data/prepared_data/test/test.pkl
     - models/alzheimerModel.zip
-    outs:
     - metrics/scores.json
