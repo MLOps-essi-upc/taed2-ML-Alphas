@@ -25,6 +25,7 @@ stages:
     cmd:
     - python3 src/models/train.py
     deps:
+    - data/prepared_data/test/test.pkl
     - data/prepared_data/train/train.pkl
     - params.yaml
     outs:
